@@ -1,35 +1,55 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { fetchJDList, fetchJDById, updateJD } from "../../services/jd";
+
+interface JD {
+  jd_id: string;
+  title: string;
+  content: string;
+}
 
 export default function JDViewerEditor() {
-  const [jd, setJd] = useState("");
+  const [jdList, setJdList] = useState<JD[]>([]);
+  const [selectedJdId, setSelectedJdId] = useState<string>("");
+  const [jdContent, setJdContent] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
 
+  // Lấy danh sách JD
   useEffect(() => {
-    const fakeJD =
-    `🎯JD Tuyển dụng vị trí Frontend Developer
-        - Thành thạo ReactJS, HTML/CSS, JavaScript
-        - Ưu tiên biết TailwindCSS và Typescript
-        - Kinh nghiệm: 1 năm trở lên
-        - Làm việc tại: Quận 1, TP.HCM`;
-    setJd(fakeJD);
+    const loadJDList = async () => {
+      try {
+        const list = await fetchJDList();
+        setJdList(list);
+        if (list.length > 0) {
+          setSelectedJdId(list[0].jd_id);
+        }
+      } catch (err) {
+        console.error("Lỗi khi lấy danh sách JD:", err);
+      }
+    };
+
+    loadJDList();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchJD = async () => {
-  //     try {
-  //       const res = await axios.get("/api/jd"); // 🔁 Gọi API lấy JD từ server
-  //       setJd(res.data.content);
-  //     } catch (err) {
-  //       console.error("Lỗi khi lấy JD:", err);
-  //     }
-  //   };
-  //   fetchJD();
-  // }, []);
+  // Lấy nội dung JD khi chọn
+  useEffect(() => {
+    if (!selectedJdId) return;
 
+    const loadJDDetail = async () => {
+      try {
+        const detail = await fetchJDById(selectedJdId);
+        setJdContent(detail.content);
+      } catch (err) {
+        console.error("Lỗi khi lấy nội dung JD:", err);
+      }
+    };
+
+    loadJDDetail();
+  }, [selectedJdId]);
+
+  // Lưu nội dung JD đã chỉnh sửa
   const handleSave = async () => {
     try {
-      await axios.put("/api/jd", { content: jd }); // 🔁 Gửi JD mới lên server
+      await updateJD(selectedJdId, jdContent);
       setIsEditing(false);
     } catch (err) {
       console.error("Lỗi khi lưu JD:", err);
@@ -39,11 +59,24 @@ export default function JDViewerEditor() {
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
       <h3 className="font-semibold mb-2">📄 JD Tuyển dụng</h3>
+
+      <select
+        value={selectedJdId}
+        onChange={(e) => setSelectedJdId(e.target.value)}
+        className="border px-2 py-1 mb-2"
+      >
+        {jdList.map((jd) => (
+          <option key={jd.jd_id} value={jd.jd_id}>
+            {jd.title}
+          </option>
+        ))}
+      </select>
+
       {isEditing ? (
         <>
           <textarea
-            value={jd}
-            onChange={(e) => setJd(e.target.value)}
+            value={jdContent}
+            onChange={(e) => setJdContent(e.target.value)}
             className="w-full h-40 border rounded p-2 mb-2"
           />
           <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-1 rounded mr-2">
@@ -55,7 +88,7 @@ export default function JDViewerEditor() {
         </>
       ) : (
         <>
-          <p className="whitespace-pre-line text-sm text-gray-700 mb-2">{jd}</p>
+          <p className="whitespace-pre-line text-sm text-gray-700 mb-2">{jdContent}</p>
           <button onClick={() => setIsEditing(true)} className="text-blue-600 underline">
             Chỉnh sửa
           </button>

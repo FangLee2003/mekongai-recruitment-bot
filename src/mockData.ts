@@ -8,7 +8,7 @@ export const mockJD = {
   ],
 };
 
-export const mockApplicants = [
+export const mockCandidates = [
   {
     id: "cv_001",
     name: "Nguyễn Văn A",

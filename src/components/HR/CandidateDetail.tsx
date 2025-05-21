@@ -1,83 +1,64 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import ScoreChart from "../ScoreChart";
+import ChatHistory from "../ChatHistory";
 
 interface Props {
-  cvId: string;
-}
-
-interface EvaluationResult {
-  status: "evaluated" | "pending";
-  result: "Đạt" | "Không đạt";
-  score: number; // từ 0–100
-  detail: string;
-}
-
-export default function CandidateDetail({ cvId }: Props) {
-  const [data, setData] = useState<EvaluationResult | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchDetail = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`/api/candidates/${cvId}/evaluation`);
-      setData(res.data);
-    } catch (err) {
-      console.error("Lỗi khi lấy đánh giá:", err);
-    } finally {
-      setLoading(false);
-    }
+  cvData: {
+    cv_id: string;
+    url: string;
+    content: string;
+    result: string;
+    score: number;
+    evaluate: string;
   };
+}
 
-  // useEffect(() => {
-  //   fetchDetail();
-  // }, [cvId]);
+export default function CandidateDetail({ cvData }: Props) {
+  if (!cvData) return null;
 
-  useEffect(() => {
-    const fake = {
-      status: "evaluated",
-      result: "Đạt",
-      score: 85,
-      detail: `✅ Ứng viên có kinh nghiệm ReactJS > 1 năm\n✅ Biết TailwindCSS và TypeScript\n⚠️ Chưa có kinh nghiệm với Redux`,
-    };
-    setData(fake);
-    setLoading(false);
-  }, [cvId]);
-
+  const { cv_id, url, content, result, score, evaluate } = cvData;
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
-      <h3 className="font-semibold mb-2">📊 Đánh giá từ AI</h3>
-      {loading ? (
-        <p className="text-sm text-gray-600">Đang tải...</p>
-      ) : !data ? (
-        <p className="text-sm text-red-600">Không tìm thấy dữ liệu đánh giá.</p>
-      ) : data.status === "pending" ? (
-        <p className="text-sm italic text-yellow-700">⏳ AI đang phân tích CV này...</p>
-      ) : (
-        <>
-          <div className="mb-2">
-            <p className="text-sm">
-              Trạng thái:{" "}
-              <span
-                className={
-                  data.result === "Đạt" ? "text-green-600 font-semibold" : "text-red-600 font-semibold"
-                }
-              >
-                {data.result}
-              </span>
-            </p>
-            <p className="text-sm">Điểm phù hợp: {data.score}/100</p>
-          </div>
+      <h3 className="font-semibold mb-2">📊 Đánh giá từ AI cho CV ID: <span className="font-mono">{cv_id}</span></h3>
 
-          <ScoreChart score={data.score} />
+      <div className="mb-2">
+        <p className="text-sm">
+          Trạng thái:
+          <span
+            className={
+              result === "Phù hợp"
+                ? "text-green-600 font-semibold ml-1"
+                : "text-red-600 font-semibold ml-1"
+            }
+          >
+            {result}
+          </span>
+        </p>
+        <p className="text-sm">
+          Điểm phù hợp: <span className="font-bold">{score}</span> / 100
+        </p>
+      </div>
 
-          {/* Phân tích chi tiết */}
-          <div className="bg-gray-50 p-3 rounded text-sm whitespace-pre-line">
-            {data.detail}
-          </div>
-        </>
-      )}
+      <ScoreChart score={score} />
+
+      <div className="bg-gray-50 p-3 mt-4 rounded text-sm whitespace-pre-line text-gray-700">
+        {evaluate}
+      </div>
+
+      <div className="mt-4 text-sm">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 underline"
+        >
+          📄 Xem CV gốc (PDF)
+        </a>
+      </div>
+
+      <div className="mt-6">
+        <ChatHistory cvId={cvData.cv_id} />
+      </div>
     </div>
   );
 }

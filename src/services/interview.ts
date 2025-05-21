@@ -1,0 +1,54 @@
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+/**
+ * Gửi câu trả lời phỏng vấn và nhận phản hồi từ AI (dạng stream)
+ */
+export async function sendInterviewAnswer(cvId: string, answer: string): Promise<string> {
+  const res = await fetch(`${BASE_URL}/v1/chatbot-recruitment-stream`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cv_id: cvId, query: answer }),
+  });
+
+  if (!res.body) throw new Error("Không nhận được phản hồi dạng stream từ AI");
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+  let result = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    result += decoder.decode(value, { stream: true });
+  }
+
+  return result;
+}
+
+/**
+ * Lấy lịch sử cuộc trò chuyện phỏng vấn
+ */
+export async function fetchInterviewHistory(cvId: string) {
+  const res = await fetch(`${BASE_URL}/v1/history`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cv_id: cvId }),
+  });
+
+  if (!res.ok) throw new Error("Không thể lấy lịch sử cuộc phỏng vấn");
+  return await res.json(); // [{ type: 'question' | 'answer', text: string }]
+}
+
+/**
+ * Tạo bộ câu hỏi phỏng vấn từ CV
+ */
+export async function generateQuestionSet(cvId: string) {
+  const res = await fetch(`${BASE_URL}/v1/generate-question-set`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cv_id: cvId }),
+  });
+
+  if (!res.ok) throw new Error("Không thể tạo bộ câu hỏi");
+  return await res.json(); // { questions: [string, ...] }
+}

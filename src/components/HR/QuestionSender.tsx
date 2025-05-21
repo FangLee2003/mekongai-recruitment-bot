@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { generateQuestionSet } from "../../services/interview";
 
 interface Props {
   cvId: string;
@@ -10,34 +10,20 @@ export default function QuestionSender({ cvId }: Props) {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
-  // const handleGenerate = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.post("/api/generate-question-set", { cv_id: cvId });
-  //     setQuestions(res.data.questions); // ví dụ: [string, string, ...]
-  //   } catch (err) {
-  //     console.error("Lỗi khi tạo câu hỏi:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const fakeQuestions = [
-    "Hãy giới thiệu về bản thân bạn.",
-    "Bạn đã từng dùng TailwindCSS để giải quyết vấn đề gì?",
-    "Bạn gặp khó khăn gì khi dùng React Hook?",
-  ];
-
   const handleGenerate = async () => {
     setLoading(true);
-    await new Promise((res) => setTimeout(res, 1000)); // fake delay
-    setQuestions(fakeQuestions);
-    setLoading(false);
+    try {
+      const res = await generateQuestionSet(cvId); // { questions: [...] }
+      setQuestions(res.questions || []);
+    } catch (err) {
+      console.error("Lỗi khi tạo câu hỏi:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-
   const handleSend = () => {
-    // Giả lập: lưu vào localStorage (hoặc context/global store)
+    // Giả lập lưu câu hỏi cho phía ứng viên
     localStorage.setItem("question_set", JSON.stringify(questions));
     localStorage.setItem("question_set_ready", "true");
     setSent(true);

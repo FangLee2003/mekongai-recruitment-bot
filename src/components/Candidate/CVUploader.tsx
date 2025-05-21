@@ -1,11 +1,20 @@
 import { useState } from "react";
-import axios from "axios";
+import { uploadCV } from "@/services/cv";
 
 interface Props {
-    onUploaded: (cvId: string) => void;
+    jdId: string;
+    onUploaded: (cvData: {
+        cv_id: string;
+        url: string;
+        jd_id: string;
+        result: string;
+        score: number;
+        evaluate: string;
+        content: string;
+    }) => void;
 }
 
-export default function CVUploader({ onUploaded }: Props) {
+export default function CVUploader({ jdId, onUploaded }: Props) {
     const [file, setFile] = useState<File | null>(null);
     const [status, setStatus] = useState<"idle" | "uploading" | "done">("idle");
 
@@ -15,16 +24,9 @@ export default function CVUploader({ onUploaded }: Props) {
         setStatus("uploading");
 
         try {
-            const formData = new FormData();
-            formData.append("file", file);
-
-            const res = await axios.post("/api/upload-cv", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-
-            const cvId = res.data.cv_id;
-            localStorage.setItem("cv_id", cvId); // 👈 lưu để sử dụng tiếp
-            onUploaded(cvId);
+            const cvData = await uploadCV(file, jdId);
+            localStorage.setItem("cv_id", cvData.cv_id);
+            onUploaded(cvData);
             setStatus("done");
         } catch (error) {
             console.error("Lỗi khi upload CV:", error);
@@ -35,12 +37,14 @@ export default function CVUploader({ onUploaded }: Props) {
     return (
         <div className="bg-gray-50 p-4 rounded shadow mb-4">
             <h3 className="font-semibold mb-2">📤 Upload CV</h3>
+
             <input
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
                 className="mb-2 block"
             />
+
             <button
                 disabled={!file || status === "uploading"}
                 onClick={handleUpload}
