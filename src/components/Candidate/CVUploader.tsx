@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
 import { uploadCV } from "../../services/cv";
+import type { UploadedCV } from "../../types";
 
 interface Props {
     jdId: string;
-    onUploaded: (cvData: {
-        cv_id: string;
-        url: string;
-        jd_id: string;
-        result: string;
-        score: number;
-        evaluate: string;
-        content: string;
-    }) => void;
+    onUploaded: (cvData: UploadedCV) => void;
 }
 
 export default function CVUploader({ jdId, onUploaded }: Props) {

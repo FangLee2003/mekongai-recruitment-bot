@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchCVFiltered } from "../../services/cv";
 import { FaInfoCircle, FaComments } from "react-icons/fa";
 
-interface Candidate {
-  cv_id: number;
-  result: string;
-  score: number;
-  evaluate: string;
-  url: string;
-  status: number; // trạng thái vòng 1,2,3 theo yêu cầu
-}
-
+import type { Candidate } from "../../types";
 interface Props {
   jdId: string;
   onShowDetail: (cvId: string) => void;

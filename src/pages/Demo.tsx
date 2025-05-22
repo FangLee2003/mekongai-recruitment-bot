@@ -11,16 +11,7 @@ import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
 import AnimatedModal from "../components/AnimatedModal";
 
-interface UploadedCV {
-  cv_id: string;
-  url: string;
-  jd_id: string;
-  result: string;
-  score: number;
-  evaluate: string;
-  content: string;
-  status: number; // trạng thái vòng 1,2,3 theo yêu cầu
-}
+import type { UploadedCV } from "../types";
 
 export default function Demo() {
   const [uploadedCV, setUploadedCV] = useState<UploadedCV | null>(null);
@@ -46,7 +37,7 @@ export default function Demo() {
       <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
         <JDViewerEditor onChange={setSelectedJdHRId} />
         <CandidateList
-          jdId={Number(selectedJdHRId)}
+          jdId={selectedJdHRId}
           onShowDetail={(cvId) => { setSelectedCVId(cvId); setDetailModalOpen(true); }}
           onShowChat={(cvId) => { setSelectedCVId(cvId); setChatModalOpen(true); }}
           onApproveCV={(cvId) => { /* Xử lý duyệt CV */ }}
@@ -59,20 +50,19 @@ export default function Demo() {
       {/* CANDIDATE SIDE */}
       <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
         <JDViewer onChange={setSelectedJdId} />
-        {(!uploadedCV || uploadedCV.status === 0) && (
+        {(!uploadedCV || uploadedCV.status === 0) && viewState !== "invited" && (
           <CVUploader
             jdId={selectedJdId}
             onUploaded={(cvData) => {
               localStorage.setItem("cv_id", cvData.cv_id);
               setUploadedCV(cvData);
-              setViewState("evaluated");
+              setViewState("evaluated"); // hoặc trạng thái phù hợp
             }}
           />
         )}
-
-        {uploadedCV && <CandidateDetail cvId={uploadedCV.cv_id} />}
-
-        {viewState === "invited" && <Invitation onAccept={() => setViewState("chatting")} />}
+        {viewState === "invited" && uploadedCV && (
+          <Invitation onAccept={() => setViewState("chatting")} />
+        )}
         {viewState === "chatting" && uploadedCV && (
           <InterviewChat cvId={uploadedCV.cv_id} onFinish={() => setViewState("done")} />
         )}
