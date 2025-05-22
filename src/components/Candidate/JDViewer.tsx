@@ -87,10 +87,11 @@ export default function JDViewer({ onChange }: Props) {
           scrollbar-color: rgba(100, 210, 255, 0.9) transparent;
         }
       `}</style>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4 sm:gap-0">
         <h3 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-          📄 Thông tin JD Tuyển dụng
+          📄 Job Description
         </h3>
         {/* Selector */}
         <div className="w-full sm:w-1/3 md:w-1/4">
