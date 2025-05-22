@@ -36,7 +36,7 @@ export default function ChatHistory({ cvId }: Props) {
   }
 
   return (
-    <div className="bg-white p-4 rounded shadow">
+    <div className="bg-white p-4 rounded shadow ">
       <h3 className="font-semibold mb-2">🗂 Lịch sử bài phỏng vấn</h3>
 
       <div className="h-72 overflow-y-auto border p-3 space-y-2 bg-gray-50 rounded">
