@@ -16,10 +16,18 @@ export async function uploadCV(file: File, jd_id: string) {
   return result.data;
 }
 
-export async function fetchCVList() {
-  const res = await fetch(`${BASE_URL}/v2/cv`);
-  if (!res.ok) throw new Error("Lỗi khi lấy danh sách CV");
-  return await res.json(); // [{ cv_id, result, score, evaluate, url, ... }]
+export async function fetchCVList(jd_id: number) {
+  try {
+    const url = `${BASE_URL}/v2/cv/filter/?jd_id=${jd_id}`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Lỗi khi lấy danh sách CV (status: ${res.status})`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("fetchCVList error:", error);
+    throw error;
+  }
 }
 
 export async function evaluateCV(cvId: string) {

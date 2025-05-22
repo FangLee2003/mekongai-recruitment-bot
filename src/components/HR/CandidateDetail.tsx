@@ -5,17 +5,19 @@ interface Props {
   cvData: {
     cv_id: string;
     url: string;
-    content: string;
-    result: string;
-    score: number;
-    evaluate: string;
+    content: string; 
+    valuate: {
+      result: string;
+      score: number;
+      evaluate: string;
+    };
   };
 }
-
 export default function CandidateDetail({ cvData }: Props) {
   if (!cvData) return null;
 
-  // const { cv_id, content, result, evaluate, score, jd_id, create_at, update_at, url } = cvData;
+  const { cv_id, url, content } = cvData;
+  const { result, score, evaluate } = cvData.valuate;
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
@@ -26,8 +28,8 @@ export default function CandidateDetail({ cvData }: Props) {
           Trạng thái:
           <span
             className={
-              cvData.result === "Phù hợp"
-                ? "text-green-600 font-semibold ml-1"
+              result === "Phù hợp"
+                ? "text-green-600 font-semibold ml-1"  
                 : "text-red-600 font-semibold ml-1"
             }
           >
@@ -35,21 +37,21 @@ export default function CandidateDetail({ cvData }: Props) {
           </span>
         </p>
         <p className="text-sm">
-          Điểm phù hợp: <span className="font-bold">{cvData.score}</span> / 100
+          Điểm phù hợp: <span className="font-bold">{score}</span>/100
         </p>
       </div>
 
       <ScoreChart score={cvData.score} />
 
       <div className="bg-gray-50 p-3 mt-4 rounded text-sm whitespace-pre-line text-gray-700">
-        {cvData.evaluate}
+        {evaluate} 
       </div>
 
       <div className="mt-4 text-sm">
         <a
           href={cvData.url}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer" 
           className="text-blue-600 underline"
         >
           📄 Xem CV gốc (PDF)
