@@ -86,6 +86,32 @@ export default function JDViewerEditor({ onChange }: Props) {
 
   return (
     <div className="mt-5 mb-5 mx-auto bg-gradient-to-tr from-blue-900 via-indigo-900 to-gray-900 text-gray-100 p-8 rounded-2xl shadow-lg">
+      <style>{`
+        /* CSS scrollbar custom */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: rgba(100, 210, 255, 0.6);
+          border-radius: 10px;
+          border: 2px solid transparent;
+          background-clip: content-box;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(100, 210, 255, 0.9);
+        }
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(100, 210, 255, 0.6) transparent;
+        }
+        .custom-scrollbar:hover {
+          scrollbar-color: rgba(100, 210, 255, 0.9) transparent;
+        }
+      `}</style>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <h3 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
@@ -156,7 +182,9 @@ export default function JDViewerEditor({ onChange }: Props) {
             </>
           ) : (
             <>
-              <div className="prose prose-invert max-w-none whitespace-pre-wrap mb-4">
+              <div className="prose prose-invert max-w-full break-words overflow-y-auto custom-scrollbar"
+                style={{ maxHeight: "400px" }}
+              >
                 <ReactMarkdown
                   remarkPlugins={remarkPlugins}
                   rehypePlugins={rehypePlugins}

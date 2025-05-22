@@ -10,6 +10,7 @@ import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
 
 import { useEffect, useState } from "react";
+import { FiUsers, FiUserCheck, FiMessageCircle, FiFileText } from "react-icons/fi";
 
 export default function Demo() {
   const [currentCVId, setCurrentCVId] = useState<string | null>(null);
@@ -39,7 +40,10 @@ export default function Demo() {
     <div className="flex h-screen">
       {/* HR SIDE */}
       <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
-        <h2 className="text-xl font-bold mb-2">🧑‍💼 Doanh nghiệp (HR)</h2>
+        <h2 className="flex items-center text-2xl font-semibold text-blue-800 mb-4">
+            <FiUsers className="mr-2" />
+            Doanh nghiệp (HR)
+        </h2>
         <JDViewerEditor onChange={setSelectedJdHRId}/>
           <CandidateList
           jd_id={Number(selectedJdHRId)}
@@ -52,7 +56,10 @@ export default function Demo() {
 
       {/* CANDIDATE SIDE */}
       <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
-        <h2 className="text-xl font-bold mb-2">👩‍💻 Ứng viên</h2>
+        <h2 className="flex items-center text-2xl font-semibold text-blue-800 mb-4">
+            <FiUserCheck className="mr-2" />
+            Ứng viên
+        </h2>
         <JDViewer 
           onChange={setSelectedJdId}
         />
