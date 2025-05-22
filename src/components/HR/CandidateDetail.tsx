@@ -26,7 +26,7 @@ export default function CandidateDetail({ cvId }: Props) {
     const loadCVData = async () => {
       setLoading(true);
       try {
-        const data = await fetchCVFiltered(Number(cvId));
+        const data = await fetchCVFiltered(cvId);
         if (Array.isArray(data) && data.length > 0) {
           // API trả về mảng, lấy phần tử đầu tiên
           setCvData(data[0]);

@@ -9,7 +9,7 @@ import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
 import AnimatedModal from "../components/AnimatedModal";
 
-import { generateQuestionSet, sendInterviewAnswer } from "../services/interview";
+import { generateQuestionSet } from "../services/interview";
 
 import type { UploadedCV } from "../types";
 
@@ -25,8 +25,6 @@ export default function Demo() {
 
   const [viewState, setViewState] = useState("idle");
   console.log("viewState", viewState);
-
-  const [candidateStatusMap, setCandidateStatusMap] = useState<Record<string, number>>({}); // cvId => status vòng
 
   useEffect(() => {
     const cvId = localStorage.getItem("cv_id");
@@ -70,9 +68,9 @@ export default function Demo() {
           onShowDetail={(cvId) => { setSelectedCVId(cvId); setDetailModalOpen(true); }}
           onShowChat={(cvId) => { setSelectedCVId(cvId); setChatModalOpen(true); }}
           onApproveCV={handleApproveCV}
-          onSendToCandidate={(cvId) => { /* Gửi CV */ }}
-          onScheduleInterview={(cvId) => { /* Đặt lịch phỏng vấn */ }}
-          onNotifyHired={(cvId) => { /* Thông báo trúng tuyển */ }}
+          onSendToCandidate={(cvId) => { console.log("Gửi CV cho ứng viên", cvId); }}
+          onScheduleInterview={(cvId) => { console.log("Đặt lịch phỏng vấn", cvId); }}
+          onNotifyHired={(cvId) => { console.log("Thông báo trúng tuyển", cvId); }}
         />
       </div>
 
@@ -97,12 +95,12 @@ export default function Demo() {
         )}
         {viewState === "chatting" && (
           <InterviewChat
-            cvId={localStorage.getItem("cv_id")}
+            cvId={localStorage.getItem("cv_id") || ""}
             onFinish={() => setViewState("done")}
             initialQuestion="Rất vui được gặp bạn! Tôi là AI phỏng vấn viên của MekongAI, sẽ đồng hành cùng bạn trong buổi phỏng vấn hôm nay. Bạn đã sẵn sàng để bắt đầu chưa?"
           />
         )}
-        {viewState === "done" && uploadedCV && (
+        {viewState === "done" && selectedCVId && (
           <ChatHistory cvId={selectedCVId} />
         )}
       </div>

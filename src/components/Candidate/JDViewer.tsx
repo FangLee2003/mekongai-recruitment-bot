@@ -24,7 +24,10 @@ export default function JDViewer({ onChange }: Props) {
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   // State quản lý collapse
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [
+    isOpen,
+    // setIsOpen
+  ] = useState<boolean>(true);
 
   const remarkPlugins = [remarkGfm, remarkBreaks];
   const rehypePlugins = [rehypeRaw, rehypeSanitize];

@@ -5,7 +5,7 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": ["node"],
+    "types": ["node", "react", "react-dom"],
     "target": "esnext", // Điều chỉnh target theo yêu cầu của bạn (esnext hoặc es6)
     "module": "esnext", // Điều chỉnh module
     "jsx": "react-jsx", // Đảm bảo sử dụng React JSX mới nhất

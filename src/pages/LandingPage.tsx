@@ -6,7 +6,7 @@ import {
   Bot,
   ClipboardCheck,
   CalendarClock,
-  UserCheck,
+  // UserCheck,
   ChevronRight,
   Sparkles,
   Target,

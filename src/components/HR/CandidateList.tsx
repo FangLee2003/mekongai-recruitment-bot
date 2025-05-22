@@ -53,12 +53,6 @@ export default function CandidateList({
     return true;
   });
 
-  // Màu status
-  const statusColors = {
-    "Phù hợp": "text-green-600 bg-green-100",
-    "Không phù hợp": "text-red-600 bg-red-100",
-  };
-
   return (
     <div className="mx-auto bg-white rounded-xl p-6 border-2 border-blue-700 shadow-lg transition hover:shadow-xl hover:border-blue-800">
       <h3 className="text-2xl font-bold mb-6 text-gray-900 select-none">🧾 Danh sách ứng viên</h3>
@@ -98,10 +92,9 @@ export default function CandidateList({
 
                 <div
                   className={`inline-block px-3 py-1 rounded-full font-medium text-sm
-                    ${
-                      c.result === "Phù hợp"
-                        ? "text-green-700 bg-green-100"
-                        : "text-red-700 bg-red-100"
+                    ${c.result === "Phù hợp"
+                      ? "text-green-700 bg-green-100"
+                      : "text-red-700 bg-red-100"
                     }
                   `}
                 >

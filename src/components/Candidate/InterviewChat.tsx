@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { sendInterviewAnswer, fetchInterviewHistory } from "../../services/interview";
+import {
+  sendInterviewAnswer,
+  // fetchInterviewHistory 
+} from "../../services/interview";
 
 interface Props {
   cvId: string;
@@ -68,10 +71,10 @@ export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props
           <div
             key={idx}
             className={`max-w-xs px-3 py-2 rounded-lg text-sm ${msg.type === "question"
-                ? "bg-gray-300 text-left self-start"
-                : msg.type === "answer"
-                  ? "bg-blue-500 text-white text-right self-end ml-auto"
-                  : "text-center text-green-600 font-semibold"
+              ? "bg-gray-300 text-left self-start"
+              : msg.type === "answer"
+                ? "bg-blue-500 text-white text-right self-end ml-auto"
+                : "text-center text-green-600 font-semibold"
               }`}
           >
             {msg.text}

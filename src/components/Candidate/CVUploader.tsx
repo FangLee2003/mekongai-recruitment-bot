@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { uploadCV } from "../../services/cv";
 import type { UploadedCV } from "../../types";
@@ -7,7 +8,7 @@ interface Props {
   onUploaded: (cvData: UploadedCV) => void;
 }
 
-const fileTypeIcons: Record<string, JSX.Element> = {
+const fileTypeIcons: Record<string, React.JSX.Element> = {
   pdf: (
     <svg
       className="w-10 h-10 text-red-500"
