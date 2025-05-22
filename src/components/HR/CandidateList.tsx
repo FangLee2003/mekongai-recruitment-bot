@@ -1,33 +1,32 @@
-// CandidateList.tsx
 import { useEffect, useState } from "react";
-import { fetchCVList } from "@/services/cv";
+import { fetchCVList } from "../../services/cv";
+import { FaInfoCircle, FaComments } from "react-icons/fa";
 
 interface Candidate {
   cv_id: number;
-  jd_id: number;
   result: string;
   score: number;
   evaluate: string;
   url: string;
 }
 
-interface CandidateListProps {
-  jd_id: number;
-  onSelect: (cvId: string) => void;
+interface Props {
+  jdId: number;
+  onShowDetail: (cvId: string) => void;
+  onShowChat: (cvId: string) => void;
 }
 
-export default function CandidateList({
-  jd_id,
-  onSelect,
-}: CandidateListProps) {
+export default function CandidateList({ jdId, onShowDetail, onShowChat }: Props) {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!jdId) return;
+
     const load = async () => {
       setLoading(true);
       try {
-        const res = await fetchCVList(jd_id);
+        const res = await fetchCVList(jdId);
         setCandidates(res);
       } catch (err) {
         console.error("Lỗi khi tải danh sách ứng viên:", err);
@@ -36,14 +35,12 @@ export default function CandidateList({
       }
     };
 
-    if (jd_id) load();
-    else setCandidates([]);
-  }, [jd_id]);
+    load();
+  }, [jdId]);
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4" >
       <h3 className="font-semibold mb-2">🧾 Danh sách ứng viên</h3>
-
       {loading ? (
         <p className="text-sm text-gray-600">Đang tải...</p>
       ) : candidates.length > 0 ? (
@@ -51,24 +48,38 @@ export default function CandidateList({
           {candidates.map((c) => (
             <li
               key={c.cv_id}
-              className="cursor-pointer p-2 border rounded hover:bg-gray-100"
-              onClick={() => onSelect(String(c.cv_id))}
+              className="border rounded p-2 flex items-center justify-between hover:bg-gray-100"
             >
-              <div className="text-sm">
-                CV ID: <span className="font-mono">{c.cv_id}</span>
+              <div>
+                <div className="text-sm">
+                  CV ID: <span className="font-mono">{c.cv_id}</span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  Trạng thái: <span className="text-red-600">{c.result}</span> – Điểm: {c.score}/100
+                </div>
               </div>
-              <div className="text-xs text-gray-500">
-                Trạng thái:{" "}
-                <span className="text-red-600">{c.result}</span> – Điểm:{" "}
-                {c.score}/100
+
+              <div className="flex gap-3 text-gray-600">
+                <button
+                  onClick={() => onShowDetail(String(c.cv_id))}
+                  title="Xem đánh giá chi tiết"
+                  className="hover:text-blue-600"
+                >
+                  <FaInfoCircle size={18} />
+                </button>
+                <button
+                  onClick={() => onShowChat(String(c.cv_id))}
+                  title="Xem lịch sử trò chuyện"
+                  className="hover:text-green-600"
+                >
+                  <FaComments size={18} />
+                </button>
               </div>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-gray-500 italic">
-          Chưa có ứng viên nào.
-        </p>
+        <p className="text-sm text-gray-500 italic">Chưa có ứng viên nào.</p>
       )}
     </div>
   );
