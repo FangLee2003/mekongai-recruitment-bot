@@ -12,8 +12,11 @@ interface JD {
   content: string; // Markdown hoặc HTML
 }
 
+interface Props {
+  onChange?: (jd_id: string) => void;
+}
 
-export default function JDViewerEditor() {
+export default function JDViewerEditor({ onChange }: Props) {
   const [jdList, setJDList] = useState<JD[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [jdContent, setJdContent] = useState<string>("");
@@ -37,6 +40,7 @@ export default function JDViewerEditor() {
           setSelectedId(list[0].jd_id);
           setJdContent(list[0].content);
           setJdTitle(list[0].title);
+          onChange?.(list[0].jd_id);
         }
       } catch (err) {
         console.error("Lỗi khi lấy danh sách JD:", err);
@@ -44,7 +48,7 @@ export default function JDViewerEditor() {
         setLoadingList(false);
       }
     })();
-  }, []);
+  }, [onChange]);
 
   // Load chi tiết khi selectedId thay đổi
   useEffect(() => {
@@ -97,6 +101,7 @@ export default function JDViewerEditor() {
               onChange={(e) => {
                 setSelectedId(e.target.value);
                 setIsEditing(false);
+                onChange?.(e.target.value);
               }}
               className="w-full bg-indigo-800 border border-indigo-700 text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400 appearance-none"
               disabled={saving}

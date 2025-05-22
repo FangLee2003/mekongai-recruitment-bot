@@ -23,6 +23,7 @@ export default function Demo() {
     evaluate: string;
   } | null>(null);
   const [selectedJdId, setSelectedJdId] = useState<string>("1");
+  const [selectedJdHRId, setSelectedJdHRId] = useState<string>("1");
   const [viewState, setViewState] = useState<"idle" | "invited" | "chatting" | "done">("idle");
 
   useEffect(() => {
@@ -39,9 +40,9 @@ export default function Demo() {
       {/* HR SIDE */}
       <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
         <h2 className="text-xl font-bold mb-2">🧑‍💼 Doanh nghiệp (HR)</h2>
-        <JDViewerEditor/>
+        <JDViewerEditor onChange={setSelectedJdHRId}/>
           <CandidateList
-          jd_id={Number(selectedJdId)}
+          jd_id={Number(selectedJdHRId)}
           onSelect={setCurrentCVId}
         />
         {currentCVId && <CandidateDetail cvId={currentCVId} />}
