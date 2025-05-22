@@ -12,7 +12,11 @@ interface JD {
   content: string; // Markdown hoặc HTML
 }
 
-export default function JDViewerEditor() {
+interface Props {
+  onChange?: (jd_id: string) => void;
+}
+
+export default function JDViewerEditor({ onChange }: Props) {
   const [jdList, setJDList] = useState<JD[]>([]);
   const [selectedId, setSelectedId] = useState<string>("");
   const [jdContent, setJdContent] = useState<string>("");
@@ -36,6 +40,7 @@ export default function JDViewerEditor() {
           setSelectedId(list[0].jd_id);
           setJdContent(list[0].content);
           setJdTitle(list[0].title);
+          onChange?.(list[0].jd_id);
         }
       } catch (err) {
         console.error("Lỗi khi lấy danh sách JD:", err);

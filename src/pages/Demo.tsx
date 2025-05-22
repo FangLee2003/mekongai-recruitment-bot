@@ -40,8 +40,7 @@ export default function Demo() {
       <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
         <h2 className="text-xl font-bold mb-2">🧑‍💼 Doanh nghiệp (HR)</h2>
         <JDViewerEditor
-          selectedJdId={selectedJdId}
-          onChangeSelectedJd={setSelectedJdId}
+          onChange={setSelectedJdId}
         />
           <CandidateList
           jd_id={Number(selectedJdId)}
@@ -55,7 +54,9 @@ export default function Demo() {
       {/* CANDIDATE SIDE */}
       <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
         <h2 className="text-xl font-bold mb-2">👩‍💻 Ứng viên</h2>
-        <JDViewer />
+        <JDViewer 
+          onChange={setSelectedJdId}
+        />
         <CVUploader
           jdId={selectedJdId}
           onUploaded={(cvData) => {
