@@ -1,3 +1,4 @@
+// JDViewerEditor.tsx
 import { useEffect, useState } from "react";
 import { fetchJDList, fetchJDById, updateJD } from "../../services/jd";
 
@@ -7,33 +8,38 @@ interface JD {
   content: string;
 }
 
-export default function JDViewerEditor() {
-  const [jdList, setJdList] = useState<JD[]>([]);
-  const [selectedJdId, setSelectedJdId] = useState<string>("");
-  const [jdContent, setJdContent] = useState<string>("");
-  const [isEditing, setIsEditing] = useState(false);
+interface JDViewerEditorProps {
+  selectedJdId: string;
+  onChangeSelectedJd: (id: string) => void;
+}
 
-  // Lấy danh sách JD
+export default function JDViewerEditor({
+  selectedJdId,
+  onChangeSelectedJd,
+}: JDViewerEditorProps) {
+  const [jdList, setJdList] = useState<JD[]>([]);
+  const [jdContent, setJdContent] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  // 1. Load danh sách JD, nếu chưa có selectedJdId thì chọn mặc định
   useEffect(() => {
     const loadJDList = async () => {
       try {
         const list = await fetchJDList();
         setJdList(list);
-        if (list.length > 0) {
-          setSelectedJdId(list[0].jd_id);
+        if (list.length > 0 && !selectedJdId) {
+          onChangeSelectedJd(list[0].jd_id);
         }
       } catch (err) {
         console.error("Lỗi khi lấy danh sách JD:", err);
       }
     };
-
     loadJDList();
-  }, []);
+  }, [selectedJdId, onChangeSelectedJd]);
 
-  // Lấy nội dung JD khi chọn
+  // 2. Load chi tiết nội dung mỗi khi selectedJdId thay đổi
   useEffect(() => {
     if (!selectedJdId) return;
-
     const loadJDDetail = async () => {
       try {
         const detail = await fetchJDById(selectedJdId);
@@ -42,11 +48,10 @@ export default function JDViewerEditor() {
         console.error("Lỗi khi lấy nội dung JD:", err);
       }
     };
-
     loadJDDetail();
   }, [selectedJdId]);
 
-  // Lưu nội dung JD đã chỉnh sửa
+  // 3. Lưu khi bấm nút
   const handleSave = async () => {
     try {
       await updateJD(selectedJdId, jdContent);
@@ -62,7 +67,7 @@ export default function JDViewerEditor() {
 
       <select
         value={selectedJdId}
-        onChange={(e) => setSelectedJdId(e.target.value)}
+        onChange={(e) => onChangeSelectedJd(e.target.value)}
         className="border px-2 py-1 mb-2"
       >
         {jdList.map((jd) => (
@@ -79,17 +84,28 @@ export default function JDViewerEditor() {
             onChange={(e) => setJdContent(e.target.value)}
             className="w-full h-40 border rounded p-2 mb-2"
           />
-          <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-1 rounded mr-2">
+          <button
+            onClick={handleSave}
+            className="bg-blue-600 text-white px-4 py-1 rounded mr-2"
+          >
             Lưu
           </button>
-          <button onClick={() => setIsEditing(false)} className="text-gray-600 underline">
+          <button
+            onClick={() => setIsEditing(false)}
+            className="text-gray-600 underline"
+          >
             Hủy
           </button>
         </>
       ) : (
         <>
-          <p className="whitespace-pre-line text-sm text-gray-700 mb-2">{jdContent}</p>
-          <button onClick={() => setIsEditing(true)} className="text-blue-600 underline">
+          <p className="whitespace-pre-line text-sm text-gray-700 mb-2">
+            {jdContent}
+          </p>
+          <button
+            onClick={() => setIsEditing(true)}
+            className="text-blue-600 underline"
+          >
             Chỉnh sửa
           </button>
         </>
