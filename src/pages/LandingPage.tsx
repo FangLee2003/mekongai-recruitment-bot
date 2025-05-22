@@ -72,7 +72,7 @@ const App: React.FC = () => {
   const navLinks = [
     { href: "#features", label: "Tính Năng" },
     { href: "#how-it-works", label: "Cách Hoạt Động" },
-    { href: "/contact", label: "Liên Hệ" },
+    // { href: "/contact", label: "Liên Hệ" },
   ];
 
   return (
