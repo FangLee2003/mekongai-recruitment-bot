@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";               // render Markdown
-import remarkGfm from "remark-gfm";                       // hỗ trợ GitHub-Flavored Markdown
-import remarkBreaks from "remark-breaks";                 // giữ nguyên xuống dòng
-import rehypeRaw from "rehype-raw";                       // cho phép parse HTML trong Markdown
-import rehypeSanitize from "rehype-sanitize";             // sanitize HTML
-import { fetchJDList, fetchJDById, updateJD } from "../../services/jd";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
+import { fetchJDList, fetchJDById } from "../../services/jd";
 
 interface JD {
   jd_id: string;
@@ -12,100 +12,97 @@ interface JD {
   content: string; // Markdown hoặc HTML
 }
 
-export default function JDViewerEditor() {
-  const [jdList, setJdList] = useState<JD[]>([]);
-  const [selectedJdId, setSelectedJdId] = useState<string>("");
-  const [jdContent, setJdContent] = useState<string>("");
-  const [isEditing, setIsEditing] = useState(false);
+interface Props {
+  onChange?: (jd_id: string) => void;
+}
 
-  // Cấu hình plugins cho ReactMarkdown
+export default function JDViewer({ onChange }: Props) {
+  const [jdList, setJDList] = useState<JD[]>([]);
+  const [selectedId, setSelectedId] = useState<string>("");
+  const [jd, setJD] = useState<JD | null>(null);
+  const [loadingList, setLoadingList] = useState(true);
+  const [loadingDetail, setLoadingDetail] = useState(false);
+
   const remarkPlugins = [remarkGfm, remarkBreaks];
   const rehypePlugins = [rehypeRaw, rehypeSanitize];
 
-  // Load danh sách JD khi mount
+  // Load danh sách JD
   useEffect(() => {
     (async () => {
-      const list = await fetchJDList();
-      setJdList(list);
-      if (list.length) {
-        setSelectedJdId(list[0].jd_id);
+      try {
+        const list = await fetchJDList();
+        setJDList(list);
+        if (list.length > 0) {
+          const first = list[0];
+          setSelectedId(first.jd_id);
+          onChange?.(first.jd_id);
+        }
+      } finally {
+        setLoadingList(false);
       }
     })();
-  }, []);
+  }, [onChange]);
 
-  // Load nội dung chi tiết khi chọn JD
+  // Load chi tiết khi selectedId thay đổi
   useEffect(() => {
-    if (!selectedJdId) return;
+    if (!selectedId) return;
+    setLoadingDetail(true);
     (async () => {
-      const detail = await fetchJDById(selectedJdId);
-      setJdContent(detail.content);
+      try {
+        const detail = await fetchJDById(selectedId);
+        setJD(detail);
+      } finally {
+        setLoadingDetail(false);
+      }
     })();
-  }, [selectedJdId]);
-
-  // Lưu thay đổi
-  const handleSave = async () => {
-    await updateJD(selectedJdId, jdContent);
-    setIsEditing(false);
-  };
+  }, [selectedId]);
 
   return (
-    <div className="bg-white p-4 rounded shadow mb-4">
-      <h3 className="font-semibold mb-2">📄 JD Tuyển dụng</h3>
+    <div className="mt-5 max-w-3xl mx-auto bg-gradient-to-tr from-blue-900 via-indigo-900 to-gray-900 text-gray-100 p-8 rounded-2xl shadow-lg">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h3 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+          📄 Thông tin JD
+        </h3>
+        {/* Selector */}
+        <div className="mt-4 sm:mt-0 w-full sm:w-1/3">
+          {loadingList ? (
+            <div className="h-10 bg-indigo-800 animate-pulse rounded-lg" />
+          ) : (
+            <select
+              value={selectedId}
+              onChange={(e) => {
+                setSelectedId(e.target.value);
+                onChange?.(e.target.value);
+              }}
+              className="w-full bg-indigo-800 border border-indigo-700 text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400 appearance-none"
+            >
+              {jdList.map((item) => (
+                <option key={item.jd_id} value={item.jd_id} className="bg-indigo-800 text-gray-100">
+                  {item.title}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
 
-      {/* Dropdown chọn JD */}
-      <select
-        value={selectedJdId}
-        onChange={(e) => {
-          setSelectedJdId(e.target.value);
-          setIsEditing(false);
-        }}
-        className="border px-2 py-1 mb-2"
-      >
-        {jdList.map((jd) => (
-          <option key={jd.jd_id} value={jd.jd_id}>
+      {/* Content */}
+      {loadingDetail ? (
+        <p className="text-gray-400 italic">Đang tải nội dung JD...</p>
+      ) : jd ? (
+        <div className="space-y-8">
+          <h4 className="text-2xl font-semibold text-cyan-200 border-b border-cyan-400 pb-2">
             {jd.title}
-          </option>
-        ))}
-      </select>
-
-      {isEditing ? (
-        <>
-          {/* textarea để edit nội dung raw (Markdown/HTML) */}
-          <textarea
-            value={jdContent}
-            onChange={(e) => setJdContent(e.target.value)}
-            className="w-full h-40 border rounded p-2 mb-2"
-          />
-          <button
-            onClick={handleSave}
-            className="bg-blue-600 text-white px-4 py-1 rounded mr-2"
-          >
-            Lưu
-          </button>
-          <button
-            onClick={() => setIsEditing(false)}
-            className="text-gray-600 underline"
-          >
-            Hủy
-          </button>
-        </>
-      ) : (
-        <>
-          {/* Hiển thị nội dung qua ReactMarkdown */}
-          <div className="prose prose-sm max-w-none text-gray-800 whitespace-pre-wrap mb-2">
-            <ReactMarkdown
-              children={jdContent}
-              remarkPlugins={remarkPlugins}
-              rehypePlugins={rehypePlugins}
-            />
+          </h4>
+          <div className="prose prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+              {jd.content}
+            </ReactMarkdown>
           </div>
-          <button
-            onClick={() => setIsEditing(true)}
-            className="text-blue-600 underline"
-          >
-            Chỉnh sửa
-          </button>
-        </>
+        </div>
+      ) : (
+        <p className="text-gray-400 italic">Chưa có JD để hiển thị.</p>
       )}
     </div>
   );
