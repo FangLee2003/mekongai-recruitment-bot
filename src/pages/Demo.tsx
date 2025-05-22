@@ -65,9 +65,9 @@ export default function Demo() {
             setChatModalOpen(true);
           }}
         />
-        {currentCVId && <CandidateDetail cvId={currentCVId} />}
-        {currentCVId && <QuestionSender cvId={currentCVId} />}
-        {currentCVId && <ChatHistory cvId={currentCVId} />}
+        {selectedCVId && <CandidateDetail cvId={selectedCVId} />}
+        {selectedCVId && <QuestionSender cvId={selectedCVId} />}
+        {selectedCVId && <ChatHistory cvId={selectedCVId} />}
       </div>
 
       {/* CANDIDATE SIDE */}
@@ -80,7 +80,7 @@ export default function Demo() {
           onChange={setSelectedJdId}
         />
         <CVUploader
-          jdId={selectedJd}
+          jdId={selectedJdId}
           onUploaded={(cvData) => {
             localStorage.setItem("cv_id", cvData.cv_id);
             setUploadedCV(cvData);
