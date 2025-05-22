@@ -80,8 +80,8 @@ export default function JDViewerEditor() {
   };
 
   return (
-    <div className="mt-5 max-w-3xl mx-auto bg-gradient-to-tr from-blue-900 via-indigo-900 to-gray-900 text-gray-100 p-8 rounded-2xl shadow-lg">
-      {/* Header và selector */}
+    <div className="mt-5 mb-5 mx-auto bg-gradient-to-tr from-blue-900 via-indigo-900 to-gray-900 text-gray-100 p-8 rounded-2xl shadow-lg">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <h3 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
           📄 Thông tin JD
