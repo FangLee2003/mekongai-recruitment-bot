@@ -115,7 +115,7 @@ export default function JDViewerEditor({ onChange }: Props) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <h3 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-          📄 Thông tin JD
+          📄 Job Description
         </h3>
 
         <div className="mt-4 sm:mt-0 w-full sm:w-1/3">
