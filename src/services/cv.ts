@@ -16,9 +16,9 @@ export async function uploadCV(file: File, jd_id: string) {
   return result.data;
 }
 
-export async function fetchCVList(jd_id: number) {
+export async function fetchCV() {
   try {
-    const url = `${BASE_URL}/v2/cv/filter/?jd_id=${jd_id}`;
+    const url = `${BASE_URL}/v2/cv`;
     const res = await fetch(url);
     if (!res.ok) {
       throw new Error(`Lỗi khi lấy danh sách CV (status: ${res.status})`);
@@ -26,6 +26,33 @@ export async function fetchCVList(jd_id: number) {
     return await res.json();
   } catch (error) {
     console.error("fetchCVList error:", error);
+    throw error;
+  }
+}
+
+export async function fetchCVFiltered(cv_id?: string, jd_id?: string) {
+  try {
+    // Tạo đối tượng params linh hoạt
+    const params = new URLSearchParams();
+
+    if (cv_id !== undefined && cv_id !== null) {
+      params.append("cv_id", cv_id);
+    }
+
+    if (jd_id !== undefined && jd_id !== null) {
+      params.append("jd_id", jd_id);
+    }
+
+    const url = `${BASE_URL}/v2/cv/filter/?${params.toString()}`;
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Lỗi khi lấy danh sách CV (status: ${res.status})`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Error:", error);
     throw error;
   }
 }
