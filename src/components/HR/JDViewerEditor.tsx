@@ -1,11 +1,16 @@
 // JDViewerEditor.tsx
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";               // render Markdown
+import remarkGfm from "remark-gfm";                       // hỗ trợ GitHub-Flavored Markdown
+import remarkBreaks from "remark-breaks";                 // giữ nguyên xuống dòng
+import rehypeRaw from "rehype-raw";                       // cho phép parse HTML trong Markdown
+import rehypeSanitize from "rehype-sanitize";             // sanitize HTML
 import { fetchJDList, fetchJDById, updateJD } from "../../services/jd";
 
 interface JD {
   jd_id: string;
   title: string;
-  content: string;
+  content: string; // Markdown hoặc HTML
 }
 
 interface JDViewerEditorProps {
@@ -13,58 +18,41 @@ interface JDViewerEditorProps {
   onChangeSelectedJd: (id: string) => void;
 }
 
-export default function JDViewerEditor({
-  selectedJdId,
-  onChangeSelectedJd,
-}: JDViewerEditorProps) {
-  const [jdList, setJdList] = useState<JD[]>([]);
-  const [jdContent, setJdContent] = useState<string>("");
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  // Cấu hình plugins cho ReactMarkdown
+  const remarkPlugins = [remarkGfm, remarkBreaks];
+  const rehypePlugins = [rehypeRaw, rehypeSanitize];
 
-  // 1. Load danh sách JD, nếu chưa có selectedJdId thì chọn mặc định
+  // Load danh sách JD khi mount
   useEffect(() => {
-    const loadJDList = async () => {
-      try {
-        const list = await fetchJDList();
-        setJdList(list);
-        if (list.length > 0 && !selectedJdId) {
-          onChangeSelectedJd(list[0].jd_id);
-        }
-      } catch (err) {
-        console.error("Lỗi khi lấy danh sách JD:", err);
+    (async () => {
+      const list = await fetchJDList();
+      setJdList(list);
+      if (list.length) {
+        setSelectedJdId(list[0].jd_id);
       }
-    };
-    loadJDList();
-  }, [selectedJdId, onChangeSelectedJd]);
+    })();
+  }, []);
 
-  // 2. Load chi tiết nội dung mỗi khi selectedJdId thay đổi
+  // Load nội dung chi tiết khi chọn JD
   useEffect(() => {
     if (!selectedJdId) return;
-    const loadJDDetail = async () => {
-      try {
-        const detail = await fetchJDById(selectedJdId);
-        setJdContent(detail.content);
-      } catch (err) {
-        console.error("Lỗi khi lấy nội dung JD:", err);
-      }
-    };
-    loadJDDetail();
+    (async () => {
+      const detail = await fetchJDById(selectedJdId);
+      setJdContent(detail.content);
+    })();
   }, [selectedJdId]);
 
-  // 3. Lưu khi bấm nút
+  // Lưu thay đổi
   const handleSave = async () => {
-    try {
-      await updateJD(selectedJdId, jdContent);
-      setIsEditing(false);
-    } catch (err) {
-      console.error("Lỗi khi lưu JD:", err);
-    }
+    await updateJD(selectedJdId, jdContent);
+    setIsEditing(false);
   };
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
       <h3 className="font-semibold mb-2">📄 JD Tuyển dụng</h3>
 
+      {/* Dropdown chọn JD */}
       <select
         value={selectedJdId}
         onChange={(e) => onChangeSelectedJd(e.target.value)}
@@ -79,6 +67,7 @@ export default function JDViewerEditor({
 
       {isEditing ? (
         <>
+          {/* textarea để edit nội dung raw (Markdown/HTML) */}
           <textarea
             value={jdContent}
             onChange={(e) => setJdContent(e.target.value)}
@@ -99,9 +88,14 @@ export default function JDViewerEditor({
         </>
       ) : (
         <>
-          <p className="whitespace-pre-line text-sm text-gray-700 mb-2">
-            {jdContent}
-          </p>
+          {/* Hiển thị nội dung qua ReactMarkdown */}
+          <div className="prose prose-sm max-w-none text-gray-800 whitespace-pre-wrap mb-2">
+            <ReactMarkdown
+              children={jdContent}
+              remarkPlugins={remarkPlugins}
+              rehypePlugins={rehypePlugins}
+            />
+          </div>
           <button
             onClick={() => setIsEditing(true)}
             className="text-blue-600 underline"
