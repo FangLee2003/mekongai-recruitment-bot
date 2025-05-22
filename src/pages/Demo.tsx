@@ -10,7 +10,7 @@ import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
 
 import { useEffect, useState } from "react";
-import { FiUsers, FiUserCheck, FiMessageCircle, FiFileText } from "react-icons/fi";
+import { FiUsers, FiUserCheck } from "react-icons/fi";
 
 export default function Demo() {
   const [currentCVId, setCurrentCVId] = useState<string | null>(null);
