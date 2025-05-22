@@ -204,7 +204,7 @@ export default function CVUploader({ jdId, onUploaded }: Props) {
             ></path>
           </svg>
         )}
-        {status === "uploading" ? "Đang gửi..." : "Gửi CV"}
+        {status === "uploading" ? "Đang phân tích CV..." : "Gửi CV"}
       </button>
 
       {status === "done" && (

@@ -24,6 +24,7 @@ export default function Demo() {
   const [chatModalOpen, setChatModalOpen] = useState(false);
 
   const [viewState, setViewState] = useState("idle");
+  console.log("viewState", viewState);
 
   const [candidateStatusMap, setCandidateStatusMap] = useState<Record<string, number>>({}); // cvId => status vòng
 
@@ -41,19 +42,21 @@ export default function Demo() {
   const handleApproveCV = async (cvId: string) => {
     try {
       // Gọi API tạo bộ câu hỏi
-      const data = await generateQuestionSet(cvId);
-      console.log("Bộ câu hỏi tạo thành công:", data);
+      await generateQuestionSet(cvId);
 
-      // Cập nhật trạng thái vòng 2 cho ứng viên
-      setCandidateStatusMap((prev) => ({ ...prev, [cvId]: 1 }));
+      // Cập nhật trạng thái vòng 2 cho ứng viên (tùy cách bạn quản lý)
+      // Ví dụ cập nhật trạng thái vòng trong uploadedCV nếu đúng cvId
+      if (uploadedCV && uploadedCV.cv_id === cvId) {
+        setUploadedCV({ ...uploadedCV, status: 1 });
+      }
 
-      // Chuyển UI sang vòng 2 hoặc cập nhật viewState nếu cần
+      // Chuyển trạng thái viewState sang "invited" để hiện Invitation và chờ ứng viên trả lời
       setViewState("invited");
 
-      // Có thể hiện thêm thông báo thành công...
+      // Nếu cần có thể thông báo thành công
     } catch (error) {
-      console.error("Lỗi tạo bộ câu hỏi:", error);
-      // Hiện thông báo lỗi nếu cần
+      console.error("Lỗi khi duyệt CV:", error);
+      // Thông báo lỗi tùy ý
     }
   };
 
@@ -76,7 +79,7 @@ export default function Demo() {
       {/* CANDIDATE SIDE */}
       <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
         <JDViewer onChange={setSelectedJdId} />
-        {(!uploadedCV || uploadedCV.status === 0) && (
+        {(!uploadedCV && viewState !== "invited") && (
           <CVUploader
             jdId={selectedJdId}
             onUploaded={(cvData) => {
@@ -92,14 +95,15 @@ export default function Demo() {
         {viewState === "invited" && (
           <Invitation onAccept={() => setViewState("chatting")} />
         )}
-        {viewState === "chatting" && uploadedCV && (
+        {viewState === "chatting" && (
           <InterviewChat
-            cvId={uploadedCV.cv_id}
+            cvId={localStorage.getItem("cv_id")}
             onFinish={() => setViewState("done")}
+            initialQuestion="Rất vui được gặp bạn! Tôi là AI phỏng vấn viên của MekongAI, sẽ đồng hành cùng bạn trong buổi phỏng vấn hôm nay. Bạn đã sẵn sàng để bắt đầu chưa?"
           />
         )}
         {viewState === "done" && uploadedCV && (
-          <ChatHistory cvId={uploadedCV.cv_id} />
+          <ChatHistory cvId={selectedCVId} />
         )}
       </div>
 

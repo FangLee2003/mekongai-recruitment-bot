@@ -34,10 +34,12 @@ export async function fetchInterviewHistory(cvId: string) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ cv_id: cvId }),
   });
-
-  if (!res.ok) throw new Error("Không thể lấy lịch sử cuộc phỏng vấn");
-  return await res.json(); // [{ type: 'question' | 'answer', text: string }]
+  if (!res.ok) throw new Error("Lỗi khi lấy lịch sử phỏng vấn");
+  const json = await res.json();
+  // Trả về mảng history thực tế
+  return json.data?.[0] || [];
 }
+
 
 /**
  * Tạo bộ câu hỏi phỏng vấn từ CV

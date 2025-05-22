@@ -18,9 +18,22 @@ export default function ChatHistory({ cvId }: Props) {
     const loadHistory = async () => {
       try {
         const data = await fetchInterviewHistory(cvId);
-        setHistory(data);
+
+        // data là mảng chứa 1 mảng messages
+        if (Array.isArray(data) && data.length > 0) {
+          // Map thành mảng ChatMessage[]
+          const messages: ChatMessage[] = data.flatMap((item: any) => [
+            { type: "question", text: item.query },
+            { type: "answer", text: item.answer },
+          ]);
+
+          setHistory(messages);
+        } else {
+          setHistory([]);
+        }
       } catch (err) {
         console.error("Lỗi khi tải lịch sử phỏng vấn:", err);
+        setHistory([]);
       } finally {
         setLoading(false);
       }
@@ -31,7 +44,7 @@ export default function ChatHistory({ cvId }: Props) {
 
   if (loading) return <p className="text-sm text-gray-500">Đang tải lịch sử...</p>;
 
-  if (!history.length) {
+  if (history.length === 0) {
     return <p className="text-sm text-gray-500 italic">Không có dữ liệu lịch sử.</p>;
   }
 
@@ -43,11 +56,10 @@ export default function ChatHistory({ cvId }: Props) {
         {history.map((msg, idx) => (
           <div
             key={idx}
-            className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-              msg.type === "question"
+            className={`max-w-xs px-3 py-2 rounded-lg text-sm ${msg.type === "question"
                 ? "bg-gray-300 text-left self-start"
                 : "bg-blue-500 text-white text-right self-end ml-auto"
-            }`}
+              }`}
           >
             {msg.text}
           </div>
