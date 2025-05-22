@@ -5,17 +5,19 @@ interface Props {
   cvData: {
     cv_id: string;
     url: string;
-    content: string;
-    result: string;
-    score: number;
-    evaluate: string;
+    content: string; 
+    valuate: {
+      result: string;
+      score: number;
+      evaluate: string;
+    };
   };
 }
-
 export default function CandidateDetail({ cvData }: Props) {
   if (!cvData) return null;
 
-  const { cv_id, url, content, result, score, evaluate } = cvData;
+  const { cv_id, url, content } = cvData;
+  const { result, score, evaluate } = cvData.valuate;
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
@@ -27,7 +29,7 @@ export default function CandidateDetail({ cvData }: Props) {
           <span
             className={
               result === "Phù hợp"
-                ? "text-green-600 font-semibold ml-1"
+                ? "text-green-600 font-semibold ml-1"  
                 : "text-red-600 font-semibold ml-1"
             }
           >
@@ -35,21 +37,21 @@ export default function CandidateDetail({ cvData }: Props) {
           </span>
         </p>
         <p className="text-sm">
-          Điểm phù hợp: <span className="font-bold">{score}</span> / 100
+          Điểm phù hợp: <span className="font-bold">{score}</span>/100
         </p>
       </div>
 
       <ScoreChart score={score} />
 
       <div className="bg-gray-50 p-3 mt-4 rounded text-sm whitespace-pre-line text-gray-700">
-        {evaluate}
+        {evaluate} 
       </div>
 
       <div className="mt-4 text-sm">
         <a
           href={url}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer" 
           className="text-blue-600 underline"
         >
           📄 Xem CV gốc (PDF)
