@@ -55,7 +55,17 @@ export default function CandidateList({ jdId, onShowDetail, onShowChat }: Props)
                   CV ID: <span className="font-mono">{c.cv_id}</span>
                 </div>
                 <div className="text-xs text-gray-500">
-                  Trạng thái: <span className="text-red-600">{c.result}</span> – Điểm: {c.score}/100
+                  Trạng thái:{' '}
+                  <span
+                    className={
+                      c.result === 'Phù hợp'
+                        ? 'text-green-600'  // nếu kết quả là "Phù hợp" thì xanh
+                        : 'text-red-600'    // ngược lại thì đỏ
+                    }
+                  >
+                    {c.result}
+                  </span>{' '}
+                  – Điểm: {c.score}/100
                 </div>
               </div>
 
