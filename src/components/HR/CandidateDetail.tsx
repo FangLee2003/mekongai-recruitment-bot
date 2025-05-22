@@ -15,39 +15,39 @@ interface Props {
 export default function CandidateDetail({ cvData }: Props) {
   if (!cvData) return null;
 
-  const { cv_id, url, content, result, score, evaluate } = cvData;
+  // const { cv_id, content, result, evaluate, score, jd_id, create_at, update_at, url } = cvData;
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
-      <h3 className="font-semibold mb-2">📊 Đánh giá từ AI cho CV ID: <span className="font-mono">{cv_id}</span></h3>
+      <h3 className="font-semibold mb-2">📊 Đánh giá từ AI cho CV ID: <span className="font-mono">{cvData.cv_id}</span></h3>
 
       <div className="mb-2">
         <p className="text-sm">
           Trạng thái:
           <span
             className={
-              result === "Phù hợp"
+              cvData.result === "Phù hợp"
                 ? "text-green-600 font-semibold ml-1"
                 : "text-red-600 font-semibold ml-1"
             }
           >
-            {result}
+            {cvData.result}
           </span>
         </p>
         <p className="text-sm">
-          Điểm phù hợp: <span className="font-bold">{score}</span> / 100
+          Điểm phù hợp: <span className="font-bold">{cvData.score}</span> / 100
         </p>
       </div>
 
-      <ScoreChart score={score} />
+      <ScoreChart score={cvData.score} />
 
       <div className="bg-gray-50 p-3 mt-4 rounded text-sm whitespace-pre-line text-gray-700">
-        {evaluate}
+        {cvData.evaluate}
       </div>
 
       <div className="mt-4 text-sm">
         <a
-          href={url}
+          href={cvData.url}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-600 underline"
