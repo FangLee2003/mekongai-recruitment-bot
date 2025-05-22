@@ -39,9 +39,7 @@ export default function Demo() {
       {/* HR SIDE */}
       <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
         <h2 className="text-xl font-bold mb-2">🧑‍💼 Doanh nghiệp (HR)</h2>
-        <JDViewerEditor
-          onChange={setSelectedJdId}
-        />
+        <JDViewerEditor/>
           <CandidateList
           jd_id={Number(selectedJdId)}
           onSelect={setCurrentCVId}
