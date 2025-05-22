@@ -3,6 +3,7 @@ import { fetchCVFiltered } from "../../services/cv";
 import { FaInfoCircle, FaComments } from "react-icons/fa";
 
 import type { Candidate } from "../../types";
+
 interface Props {
   jdId: string;
   onShowDetail: (cvId: string) => void;
@@ -52,99 +53,113 @@ export default function CandidateList({
     return true;
   });
 
+  // Màu status
+  const statusColors = {
+    "Phù hợp": "text-green-600 bg-green-100",
+    "Không phù hợp": "text-red-600 bg-red-100",
+  };
+
   return (
-    <div className="bg-white p-4 rounded shadow mb-4">
-      <h3 className="font-semibold mb-4">🧾 Danh sách ứng viên</h3>
+    <div className="mx-auto bg-white rounded-xl p-6 border-2 border-blue-700 shadow-lg transition hover:shadow-xl hover:border-blue-800">
+      <h3 className="text-2xl font-bold mb-6 text-gray-900 select-none">🧾 Danh sách ứng viên</h3>
 
       {/* Tabs */}
-      <div className="flex space-x-4 mb-4">
-        <button
-          onClick={() => setActiveTab(0)}
-          className={`px-4 py-2 rounded ${activeTab === 0 ? "bg-blue-600 text-white" : "bg-gray-200"
-            }`}
-        >
-          Vòng 1
-        </button>
-        <button
-          onClick={() => setActiveTab(1)}
-          className={`px-4 py-2 rounded ${activeTab === 1 ? "bg-blue-600 text-white" : "bg-gray-200"
-            }`}
-        >
-          Vòng 2
-        </button>
-        <button
-          onClick={() => setActiveTab(2)}
-          className={`px-4 py-2 rounded ${activeTab === 2 ? "bg-blue-600 text-white" : "bg-gray-200"
-            }`}
-        >
-          Vòng 3
-        </button>
+      <div className="flex border-b border-gray-300 mb-6">
+        {["Vòng 1", "Vòng 2", "Vòng 3"].map((label, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveTab(idx)}
+            className={`relative px-6 py-3 text-md font-semibold transition
+              ${activeTab === idx ? "text-blue-700" : "text-gray-500 hover:text-blue-600"}
+            `}
+          >
+            {label}
+            {activeTab === idx && (
+              <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 rounded-t-md"></span>
+            )}
+          </button>
+        ))}
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-600">Đang tải...</p>
+        <p className="text-center text-gray-600 text-base animate-pulse">Đang tải...</p>
       ) : filteredCandidates.length > 0 ? (
-        <ul className="space-y-2">
+        <ul className="space-y-4">
           {filteredCandidates.map((c) => (
             <li
               key={c.cv_id}
-              className="border rounded p-3 flex items-center justify-between hover:bg-gray-100"
+              className="border border-gray-200 rounded-xl p-5 flex justify-between items-center
+                shadow-sm hover:shadow-lg transition-transform hover:scale-[1.02] bg-white"
             >
               <div>
-                <div className="text-sm">
-                  CV ID: <span className="font-mono">{c.cv_id}</span>
+                <div className="text-sm text-gray-600 mb-1">
+                  CV ID: <span className="font-mono text-gray-900">{c.cv_id}</span>
                 </div>
-                <div className="text-xs text-gray-500">
-                  Trạng thái: <span className="text-red-600">{c.result}</span> – Điểm: {c.score}/100
+
+                <div
+                  className={`inline-block px-3 py-1 rounded-full font-medium text-sm
+                    ${
+                      c.result === "Phù hợp"
+                        ? "text-green-700 bg-green-100"
+                        : "text-red-700 bg-red-100"
+                    }
+                  `}
+                >
+                  {c.result} – {c.score}/100
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 text-gray-600">
+              <div className="flex items-center gap-4 text-gray-600">
                 <button
                   onClick={() => onShowDetail(String(c.cv_id))}
                   title="Xem đánh giá chi tiết"
-                  className="hover:text-blue-600"
+                  className="p-2 rounded-full hover:bg-blue-100 hover:text-blue-700 transition"
                 >
-                  <FaInfoCircle size={18} />
+                  <FaInfoCircle size={20} />
                 </button>
+
                 {/* Nút theo trạng thái */}
                 {c.status === 0 && (
                   <button
                     onClick={() => onApproveCV(String(c.cv_id))}
-                    className="px-3 py-1 rounded bg-yellow-400 text-black text-sm"
+                    className="px-4 py-2 rounded-full bg-yellow-400 text-black font-semibold hover:bg-yellow-500 transition"
                   >
                     Duyệt CV
                   </button>
                 )}
+
                 {c.status === 1 && (
                   <button
                     onClick={() => onSendToCandidate(String(c.cv_id))}
-                    className="px-3 py-1 rounded bg-blue-600 text-white text-sm"
+                    className="px-4 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
                   >
                     Gửi CV cho ứng viên
                   </button>
                 )}
+
                 {c.status === 2 && (
                   <>
                     <button
                       onClick={() => onShowChat(String(c.cv_id))}
                       title="Xem lịch sử chat"
-                      className="hover:text-green-600"
+                      className="p-2 rounded-full hover:bg-green-100 hover:text-green-700 transition"
                     >
-                      <FaComments size={18} />
+                      <FaComments size={20} />
                     </button>
+
                     <button
                       onClick={() => onScheduleInterview(String(c.cv_id))}
-                      className="px-3 py-1 rounded bg-green-500 text-white text-sm"
+                      className="px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-green-600 transition"
                     >
                       Đặt lịch phỏng vấn
                     </button>
                   </>
                 )}
+
                 {c.status === 3 && (
                   <button
                     onClick={() => onNotifyHired(String(c.cv_id))}
-                    className="px-3 py-1 rounded bg-purple-600 text-white text-sm"
+                    className="px-4 py-2 rounded-full bg-purple-600 text-white font-semibold hover:bg-purple-700 transition"
                   >
                     Thông báo trúng tuyển
                   </button>
@@ -154,7 +169,7 @@ export default function CandidateList({
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-gray-500 italic">Không có ứng viên nào ở vòng này.</p>
+        <p className="text-center text-gray-400 italic select-none">Không có ứng viên nào ở vòng này.</p>
       )}
     </div>
   );
