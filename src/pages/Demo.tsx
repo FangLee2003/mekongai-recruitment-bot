@@ -220,6 +220,5 @@ export default function Demo() {
         </AnimatedModal>
       </div>
     </div>
-    </div>
   );
 }
