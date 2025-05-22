@@ -12,9 +12,11 @@ interface Candidate {
 
 interface Props {
   jdId: number;
+  onShowDetail: (cvId: string) => void;
+  onShowChat: (cvId: string) => void;
 }
 
-export default function CandidateList({ jdId, onSelectedCV }: Props) {
+export default function CandidateList({ jdId, onShowDetail, onShowChat }: Props) {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -37,14 +39,12 @@ export default function CandidateList({ jdId, onSelectedCV }: Props) {
   }, [jdId]);
 
   return (
-    <div className="bg-white p-4 rounded shadow mb-4">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="font-semibold">🧾 Danh sách ứng viên</h3>
-      </div>
+    <div className="bg-white p-4 rounded shadow mb-4" >
+      <h3 className="font-semibold mb-2">🧾 Danh sách ứng viên</h3>
       {loading ? (
         <p className="text-sm text-gray-600">Đang tải...</p>
-      ) : (
-        <ul className="space-y-1">
+      ) : candidates.length > 0 ? (
+        <ul className="space-y-1" >
           {candidates.map((c) => (
             <li
               key={c.cv_id}
@@ -61,14 +61,14 @@ export default function CandidateList({ jdId, onSelectedCV }: Props) {
 
               <div className="flex gap-3 text-gray-600">
                 <button
-                  onClick={() => onSelectedCV(String(c.cv_id))}
+                  onClick={() => onShowDetail(String(c.cv_id))}
                   title="Xem đánh giá chi tiết"
                   className="hover:text-blue-600"
                 >
                   <FaInfoCircle size={18} />
                 </button>
                 <button
-                  onClick={() => onSelectedCV(String(c.cv_id))}
+                  onClick={() => onShowChat(String(c.cv_id))}
                   title="Xem lịch sử trò chuyện"
                   className="hover:text-green-600"
                 >
@@ -77,10 +77,9 @@ export default function CandidateList({ jdId, onSelectedCV }: Props) {
               </div>
             </li>
           ))}
-          {candidates.length === 0 && (
-            <p className="text-sm text-gray-500 italic">Chưa có ứng viên nào.</p>
-          )}
         </ul>
+      ) : (
+        <p className="text-sm text-gray-500 italic">Chưa có ứng viên nào.</p>
       )}
     </div>
   );

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import { uploadCV } from "../../services/cv";
+=======
+import { useState, useEffect  } from "react";
+import { uploadCV } from "@/services/cv";
+>>>>>>> refs/remotes/origin/main
 
 interface Props {
     jdId: string;
@@ -15,6 +20,12 @@ interface Props {
 }
 
 export default function CVUploader({ jdId, onUploaded }: Props) {
+    useEffect(() => {
+        console.log("JD ID cập nhật trong CVUploader:", jdId);
+        setFile(null);       // reset file khi jdId đổi
+        setStatus("idle");   // reset trạng thái upload
+        }, [jdId]);
+
     const [file, setFile] = useState<File | null>(null);
     const [status, setStatus] = useState<"idle" | "uploading" | "done">("idle");
 
