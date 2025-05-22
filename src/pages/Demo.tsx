@@ -9,7 +9,7 @@ import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
 import AnimatedModal from "../components/AnimatedModal";
 
-import { generateQuestionSet, sendInterviewAnswer } from "../services/questionSet";
+import { generateQuestionSet, sendInterviewAnswer } from "../services/interview";
 
 import type { UploadedCV } from "../types";
 
@@ -73,66 +73,65 @@ export default function Demo() {
         />
       </div>
 
-        {/* CANDIDATE SIDE */}
-        <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
-          <JDViewer onChange={setSelectedJdId} />
-          {(!uploadedCV || uploadedCV.status === 0) && (
-            <CVUploader
-              jdId={selectedJdId}
-              onUploaded={(cvData) => {
-                localStorage.setItem("cv_id", cvData.cv_id);
-                setUploadedCV(cvData);
-                setViewState("evaluated");
-              }}
-            />
-          )}
+      {/* CANDIDATE SIDE */}
+      <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
+        <JDViewer onChange={setSelectedJdId} />
+        {(!uploadedCV || uploadedCV.status === 0) && (
+          <CVUploader
+            jdId={selectedJdId}
+            onUploaded={(cvData) => {
+              localStorage.setItem("cv_id", cvData.cv_id);
+              setUploadedCV(cvData);
+              setViewState("evaluated");
+            }}
+          />
+        )}
 
-          {uploadedCV && <CandidateDetail cvId={uploadedCV.cv_id} />}
+        {uploadedCV && <CandidateDetail cvId={uploadedCV.cv_id} />}
 
-          {viewState === "invited" && (
-            <Invitation onAccept={() => setViewState("chatting")} />
-          )}
-          {viewState === "chatting" && uploadedCV && (
-            <InterviewChat
-              cvId={uploadedCV.cv_id}
-              onFinish={() => setViewState("done")}
-            />
-          )}
-          {viewState === "done" && uploadedCV && (
-            <ChatHistory cvId={uploadedCV.cv_id} />
-          )}
-        </div>
-
-        {/* Modal đánh giá ứng viên */}
-        <AnimatedModal
-          isOpen={detailModalOpen}
-          onRequestClose={() => setDetailModalOpen(false)}
-          contentLabel="Chi tiết đánh giá ứng viên"
-        >
-          <button
-            onClick={() => setDetailModalOpen(false)}
-            className="mb-4 text-right text-gray-600 hover:text-gray-900" // Consider making this button more prominent or positioned like modal close buttons
-          >
-            Đóng ✕
-          </button>
-          {selectedCVId && <CandidateDetail cvId={selectedCVId} />}
-        </AnimatedModal>
-
-        {/* Modal lịch sử chat */}
-        <AnimatedModal
-          isOpen={chatModalOpen}
-          onRequestClose={() => setChatModalOpen(false)}
-          contentLabel="Lịch sử trò chuyện ứng viên"
-        >
-          <button
-            onClick={() => setChatModalOpen(false)}
-            className="mb-4 text-right text-gray-600 hover:text-gray-900" // Same consideration for button styling
-          >
-            Đóng ✕
-          </button>
-          {selectedCVId && <ChatHistory cvId={selectedCVId} />}
-        </AnimatedModal>
+        {viewState === "invited" && (
+          <Invitation onAccept={() => setViewState("chatting")} />
+        )}
+        {viewState === "chatting" && uploadedCV && (
+          <InterviewChat
+            cvId={uploadedCV.cv_id}
+            onFinish={() => setViewState("done")}
+          />
+        )}
+        {viewState === "done" && uploadedCV && (
+          <ChatHistory cvId={uploadedCV.cv_id} />
+        )}
       </div>
+
+      {/* Modal đánh giá ứng viên */}
+      <AnimatedModal
+        isOpen={detailModalOpen}
+        onRequestClose={() => setDetailModalOpen(false)}
+        contentLabel="Chi tiết đánh giá ứng viên"
+      >
+        <button
+          onClick={() => setDetailModalOpen(false)}
+          className="mb-4 text-right text-gray-600 hover:text-gray-900" // Consider making this button more prominent or positioned like modal close buttons
+        >
+          Đóng ✕
+        </button>
+        {selectedCVId && <CandidateDetail cvId={selectedCVId} />}
+      </AnimatedModal>
+
+      {/* Modal lịch sử chat */}
+      <AnimatedModal
+        isOpen={chatModalOpen}
+        onRequestClose={() => setChatModalOpen(false)}
+        contentLabel="Lịch sử trò chuyện ứng viên"
+      >
+        <button
+          onClick={() => setChatModalOpen(false)}
+          className="mb-4 text-right text-gray-600 hover:text-gray-900" // Same consideration for button styling
+        >
+          Đóng ✕
+        </button>
+        {selectedCVId && <ChatHistory cvId={selectedCVId} />}
+      </AnimatedModal>
     </div>
   );
 }
