@@ -11,19 +11,20 @@ interface Candidate {
 }
 
 interface Props {
-  onSelectDetail: (cvId: string) => void;
-  onSelectChat: (cvId: string) => void;
+  jdId: number;
 }
 
-export default function CandidateList({ onSelectDetail, onSelectChat }: Props) {
+export default function CandidateList({ jdId, onSelectedCV }: Props) {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!jdId) return;
+
     const load = async () => {
       setLoading(true);
       try {
-        const res = await fetchCVList();
+        const res = await fetchCVList(jdId);
         setCandidates(res);
       } catch (err) {
         console.error("Lỗi khi tải danh sách ứng viên:", err);
@@ -33,7 +34,7 @@ export default function CandidateList({ onSelectDetail, onSelectChat }: Props) {
     };
 
     load();
-  }, []);
+  }, [jdId]);
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
@@ -60,14 +61,14 @@ export default function CandidateList({ onSelectDetail, onSelectChat }: Props) {
 
               <div className="flex gap-3 text-gray-600">
                 <button
-                  onClick={() => onSelectDetail(String(c.cv_id))}
+                  onClick={() => onSelectedCV(String(c.cv_id))}
                   title="Xem đánh giá chi tiết"
                   className="hover:text-blue-600"
                 >
                   <FaInfoCircle size={18} />
                 </button>
                 <button
-                  onClick={() => onSelectChat(String(c.cv_id))}
+                  onClick={() => onSelectedCV(String(c.cv_id))}
                   title="Xem lịch sử trò chuyện"
                   className="hover:text-green-600"
                 >

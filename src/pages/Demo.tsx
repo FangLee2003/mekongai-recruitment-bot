@@ -12,7 +12,7 @@ import ChatHistory from "../components/ChatHistory";
 import { useEffect, useState } from "react";
 
 export default function Demo() {
-  const [currentCVId, setCurrentCVId] = useState<string | null>(null);
+  const [selectedCV, setSelectedCV] = useState<string | null>(null);
   const [uploadedCV, setUploadedCV] = useState<{
     cv_id: string;
     url: string;
@@ -22,7 +22,7 @@ export default function Demo() {
     score: number;
     evaluate: string;
   } | null>(null);
-  const [selectedJdId, setSelectedJdId] = useState<string>("1");
+  const [selectedJd, setSelectedJd] = useState<string>("1");
   const [viewState, setViewState] = useState<"idle" | "invited" | "chatting" | "done">("idle");
 
   useEffect(() => {
@@ -40,14 +40,11 @@ export default function Demo() {
       <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
         <h2 className="text-xl font-bold mb-2">🧑‍💼 Doanh nghiệp (HR)</h2>
         <JDViewerEditor />
-        
         <CandidateList
-          jd_id={Number(selectedJdId)}
-          onSelect={setCurrentCVId}
+          jdId={Number(selectedJd)}
         />
-        {currentCVId && <CandidateDetail cvId={currentCVId} />}
-        {currentCVId && <QuestionSender cvId={currentCVId} />}
-        {currentCVId && <ChatHistory cvId={currentCVId} />}
+        {selectedCV && <QuestionSender cvId={selectedCV} />}
+        {selectedCV && <ChatHistory cvId={selectedCV} />}
       </div>
 
       {/* CANDIDATE SIDE */}
@@ -55,7 +52,7 @@ export default function Demo() {
         <h2 className="text-xl font-bold mb-2">👩‍💻 Ứng viên</h2>
         <JDViewer />
         <CVUploader
-          jdId={selectedJdId}
+          jdId={selectedJd}
           onUploaded={(cvData) => {
             localStorage.setItem("cv_id", cvData.cv_id);
             setUploadedCV(cvData);
