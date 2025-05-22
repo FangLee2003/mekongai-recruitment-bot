@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { uploadCV } from "../../services/cv";
-=======
-import { useState, useEffect  } from "react";
-import { uploadCV } from "@/services/cv";
->>>>>>> refs/remotes/origin/main
 
 interface Props {
     jdId: string;
