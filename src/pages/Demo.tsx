@@ -11,6 +11,8 @@ import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
 import AnimatedModal from "../components/AnimatedModal";
 
+import { generateQuestionSet, sendInterviewAnswer } from "../services/questionSet";
+
 import type { UploadedCV } from "../types";
 
 export default function Demo() {
@@ -20,7 +22,10 @@ export default function Demo() {
   const [selectedCVId, setSelectedCVId] = useState(localStorage.getItem("cv_id"));
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [chatModalOpen, setChatModalOpen] = useState(false);
+
   const [viewState, setViewState] = useState("idle");
+
+  const [candidateStatusMap, setCandidateStatusMap] = useState<Record<string, number>>({}); // cvId => status vòng
 
   useEffect(() => {
     const cvId = localStorage.getItem("cv_id");
@@ -31,6 +36,26 @@ export default function Demo() {
     else if (cvId && isInvited) setViewState("invited");
   }, []);
 
+  // Xử lý duyệt CV
+  const handleApproveCV = async (cvId: string) => {
+    try {
+      // Gọi API tạo bộ câu hỏi
+      const data = await generateQuestionSet(cvId);
+      console.log("Bộ câu hỏi tạo thành công:", data);
+
+      // Cập nhật trạng thái vòng 2 cho ứng viên
+      setCandidateStatusMap((prev) => ({ ...prev, [cvId]: 1 }));
+
+      // Chuyển UI sang vòng 2 hoặc cập nhật viewState nếu cần
+      setViewState("invited");
+
+      // Có thể hiện thêm thông báo thành công...
+    } catch (error) {
+      console.error("Lỗi tạo bộ câu hỏi:", error);
+      // Hiện thông báo lỗi nếu cần
+    }
+  };
+
   return (
     <div className="flex h-screen">
       {/* HR SIDE */}
@@ -40,7 +65,7 @@ export default function Demo() {
           jdId={selectedJdHRId}
           onShowDetail={(cvId) => { setSelectedCVId(cvId); setDetailModalOpen(true); }}
           onShowChat={(cvId) => { setSelectedCVId(cvId); setChatModalOpen(true); }}
-          onApproveCV={(cvId) => { /* Xử lý duyệt CV */ }}
+          onApproveCV={handleApproveCV}
           onSendToCandidate={(cvId) => { /* Gửi CV */ }}
           onScheduleInterview={(cvId) => { /* Đặt lịch phỏng vấn */ }}
           onNotifyHired={(cvId) => { /* Thông báo trúng tuyển */ }}
