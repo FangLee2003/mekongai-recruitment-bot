@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { uploadCV } from "@/services/cv";
+import { uploadCV } from "../../services/cv";
 
 interface Props {
     jdId: string;
