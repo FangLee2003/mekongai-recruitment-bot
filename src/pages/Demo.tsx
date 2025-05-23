@@ -41,38 +41,38 @@ export default function Demo() {
   }, []);
 
   const [chartModalOpen, setChartModalOpen] = useState(false);
-const [chartHtml, setChartHtml] = useState<string>("");
+  const [chartHtml, setChartHtml] = useState<string>("");
 
-const handleGenerateChart = async (cvId: string) => {
-  try {
-    const res = await fetch(`https://recruitment.mekongai.com/api/v1/generate-chart`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cv_id: cvId }),
-    });
+  const handleGenerateChart = async (cvId: string) => {
+    try {
+      const res = await fetch(`https://recruitment.mekongai.com/api/v1/generate-chart`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cv_id: cvId }),
+      });
 
-    if (!res.ok) {
-      throw new Error(`Lỗi khi gọi API: ${res.status} ${res.statusText}`);
+      if (!res.ok) {
+        throw new Error(`Lỗi khi gọi API: ${res.status} ${res.statusText}`);
+      }
+
+      const json = await res.json();
+      // console.log("Biểu đồ trả về:", json.data);
+
+      // Giả sử json có dạng { data: "<html hoặc svg ...>" }
+      if (!json.data) {
+        throw new Error("API trả về dữ liệu biểu đồ rỗng");
+      }
+
+      setChartHtml(json.data);
+      setChartModalOpen(true);
+    } catch (error) {
+      console.error("Lỗi khi lấy biểu đồ:", error);
+      // Có thể hiển thị thông báo lỗi UI nếu muốn
     }
-
-    const json = await res.json();
-    // console.log("Biểu đồ trả về:", json.data);
-
-    // Giả sử json có dạng { data: "<html hoặc svg ...>" }
-    if (!json.data) {
-      throw new Error("API trả về dữ liệu biểu đồ rỗng");
-    }
-
-    setChartHtml(json.data);
-    setChartModalOpen(true);
-  } catch (error) {
-    console.error("Lỗi khi lấy biểu đồ:", error);
-    // Có thể hiển thị thông báo lỗi UI nếu muốn
-  }
-};
+  };
 
 
- 
+
   // Xử lý duyệt CV
   const handleApproveCV = async (cvId: string) => {
     try {
@@ -99,7 +99,7 @@ const handleGenerateChart = async (cvId: string) => {
   return (
     <div className="flex h-screen">
       {/* HR SIDE */}
-      <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
+      <div className="w-1/2 bg-white p-4 overflow-y-auto">
         <h2 className="flex items-center text-2xl font-semibold text-blue-800 mb-4">
           <FiUsers className="mr-2" />
           Doanh nghiệp (HR)
@@ -119,7 +119,7 @@ const handleGenerateChart = async (cvId: string) => {
       </div>
 
       {/* CANDIDATE SIDE */}
-      <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
+      <div className="w-1/2 bg-white p-4 overflow-y-auto border-l-2 border-blue-800">
         <h2 className="flex items-center text-2xl font-semibold text-blue-800 mb-4">
           <FiUserCheck className="mr-2" />
           Ứng viên
@@ -185,22 +185,22 @@ const handleGenerateChart = async (cvId: string) => {
       </AnimatedModal>
 
       <AnimatedModal
-  isOpen={chartModalOpen}
-  onRequestClose={() => setChartModalOpen(false)}
-  contentLabel="Biểu đồ thống kê"
-  // className="max-w-4xl max-h-[80vh] overflow-auto p-4 bg-white rounded-lg shadow-lg"
->
-  <button
-    onClick={() => setChartModalOpen(false)}
-    className="mb-4 text-right text-gray-600 hover:text-gray-900"
-  >
-    Đóng ✕
-  </button>
-  <div
-    style={{ width: "100%", height: "500px", overflow: "auto" }}
-    dangerouslySetInnerHTML={{ __html: chartHtml }}
-  />
-</AnimatedModal>
+        isOpen={chartModalOpen}
+        onRequestClose={() => setChartModalOpen(false)}
+        contentLabel="Biểu đồ thống kê"
+      // className="max-w-4xl max-h-[80vh] overflow-auto p-4 bg-white rounded-lg shadow-lg"
+      >
+        <button
+          onClick={() => setChartModalOpen(false)}
+          className="mb-4 text-right text-gray-600 hover:text-gray-900"
+        >
+          Đóng ✕
+        </button>
+        <div
+          style={{ width: "100%", height: "500px", overflow: "auto" }}
+          dangerouslySetInnerHTML={{ __html: chartHtml }}
+        />
+      </AnimatedModal>
 
 
     </div>
