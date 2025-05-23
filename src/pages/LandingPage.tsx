@@ -248,6 +248,72 @@ const App: React.FC = () => {
           </div>
         </div>
       </section>
+      {/* Feedback Section */}
+      <section className="py-16 bg-blue-50 px-6">
+        <h2 className="text-2xl font-bold text-center mb-10">
+          Khách hàng nói gì về Recruitment Bot
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="bg-white p-6 rounded-lg shadow text-sm">
+            <p className="italic text-gray-700">
+              “Recruitment Bot giúp công ty mình tự động phân tích hàng trăm CV mỗi ngày, tiết kiệm rất nhiều thời gian và nâng cao chất lượng tuyển dụng.”
+            </p>
+            <div className="mt-4 font-semibold text-blue-600">
+              — Anh Quang, Trưởng phòng Nhân sự Công ty RadaSoft
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow text-sm">
+            <p className="italic text-gray-700">
+              “Hệ thống phỏng vấn AI thông minh, giúp đánh giá ứng viên toàn diện hơn, giảm thiểu sai sót do con người.”
+            </p>
+            <div className="mt-4 font-semibold text-blue-600">
+              — Chị Mai, CEO Startup Tổ Ong AI
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow text-sm">
+            <p className="italic text-gray-700">
+              “Ứng viên cũng phản hồi tích cực vì có trải nghiệm phỏng vấn công bằng, minh bạch và nhanh chóng.”
+            </p>
+            <div className="mt-4 font-semibold text-blue-600">
+              — Anh Nam, Chuyên viên Tuyển dụng MekongAI
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* Newsletter Section */}
+      <section className="py-16 bg-white px-6">
+        <div className="max-w-xl mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">
+            Đăng ký nhận tin
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Nhận thông tin ưu đãi và cơ hội trải nghiệm trước các tính năng mới
+            nhất từ MekongAI.
+          </p>
+          <form
+            className="flex flex-col sm:flex-row items-center gap-4 justify-center"
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("Đã gửi! Cảm ơn bạn đã quan tâm.");
+            }}
+          >
+            <input
+              type="email"
+              required
+              placeholder="Email của bạn"
+              className="w-full sm:w-2/3 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              type="submit"
+              className="px-6 py-2 bg-sky-600 text-white rounded hover:bg-blue-700 transition"
+            >
+              Đăng ký
+            </button>
+          </form>
+        </div>
+      </section>
     </Layout>
   );
 };
