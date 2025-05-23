@@ -28,7 +28,6 @@ export default function CandidateDetail({ cvId }: Props) {
       try {
         const data = await fetchCVFiltered(cvId);
         if (Array.isArray(data) && data.length > 0) {
-          // API trả về mảng, lấy phần tử đầu tiên
           setCvData(data[0]);
         } else {
           setCvData(null);
@@ -44,54 +43,74 @@ export default function CandidateDetail({ cvId }: Props) {
     loadCVData();
   }, [cvId]);
 
-  if (loading) return <p className="text-sm text-gray-500">Đang tải thông tin ứng viên...</p>;
+  if (loading)
+    return (
+      <p className="text-center text-gray-500 italic mt-6 select-none">
+        Đang tải thông tin ứng viên...
+      </p>
+    );
 
-  if (!cvData) return <p className="text-sm text-red-600">Không tìm thấy dữ liệu ứng viên.</p>;
+  if (!cvData)
+    return (
+      <p className="text-center text-red-600 italic mt-6 select-none">
+        Không tìm thấy dữ liệu ứng viên.
+      </p>
+    );
 
   return (
-    <div className="bg-white p-4 rounded shadow mb-4">
-      <h3 className="font-semibold mb-2">
-        📊 Đánh giá từ AI cho CV ID: <span className="font-mono">{cvData.cv_id}</span>
+    <div className="mx-auto bg-white rounded-3xl shadow-2xl p-8 mt-6 select-none">
+      <h3 className="text-2xl font-extrabold mb-6 text-blue-800 flex items-center gap-3">
+        <span>📊</span> Đánh giá AI cho CV ID:{" "}
+        <code className="font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded">
+          {cvData.cv_id}
+        </code>
       </h3>
 
-      <div className="mb-2">
-        <p className="text-sm">
-          Trạng thái:{" "}
-          <span
-            className={
+      <div className="flex flex-wrap gap-6 mb-8 items-center">
+        <div
+          className={`px-4 py-2 rounded-full font-semibold text-white
+            ${
               cvData.result === "Phù hợp"
-                ? "text-green-600 font-semibold"
-                : "text-red-600 font-semibold"
+                ? "bg-gradient-to-r from-green-500 to-green-600"
+                : "bg-gradient-to-r from-red-500 to-red-600"
             }
-          >
-            {cvData.result}
-          </span>
-        </p>
-        <p className="text-sm">
-          Điểm phù hợp: <span className="font-bold">{cvData.score}</span>/100
-        </p>
+            shadow-md`}
+        >
+          {cvData.result}
+        </div>
+
+        <div className="text-xl font-semibold text-gray-800">
+          Điểm phù hợp:{" "}
+          <span className="text-blue-700">{cvData.score}</span>/100
+        </div>
       </div>
 
-      <ScoreChart score={cvData.score} />
+      <div className="max-w-md mx-auto mb-10">
+        <ScoreChart score={cvData.score} />
+      </div>
 
-      <div className="bg-gray-50 p-3 mt-4 rounded text-sm whitespace-pre-line text-gray-700">
+      <section
+        className="bg-blue-50/60 rounded-xl border border-blue-200 p-6 text-gray-700 text-base leading-relaxed
+          shadow-inner max-w-3xl mx-auto mb-10 whitespace-pre-line"
+      >
         {cvData.evaluate}
-      </div>
+      </section>
 
-      <div className="mt-4 text-sm">
+      <div className="text-center mb-10">
         <a
           href={cvData.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 underline"
+          className="inline-block text-blue-700 font-semibold underline
+            hover:text-blue-900 transition-colors"
         >
           📄 Xem CV gốc (PDF)
         </a>
       </div>
 
-      <div className="mt-6">
+      <section className="max-w-4xl mx-auto border-t border-gray-200 pt-6">
         <ChatHistory cvId={cvData.cv_id} />
-      </div>
+      </section>
     </div>
   );
 }

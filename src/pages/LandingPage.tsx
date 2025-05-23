@@ -25,7 +25,7 @@ const App: React.FC = () => {
       description:
         "Ứng viên dễ dàng tải CV, khởi đầu quy trình tuyển dụng tự động.",
       image:
-        "https://placehold.co/600x400/E2E8F0/4A5568?text=Upload+CV",
+        "https://prnt.sc/PIJ53BAo-ReV",
     },
     {
       icon: BrainCircuit,
