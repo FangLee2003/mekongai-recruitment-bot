@@ -19,54 +19,54 @@ const App: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const features = [
-    {
-      icon: UploadCloud,
-      title: "Tải CV Thông Minh",
-      description:
-        "Ứng viên dễ dàng tải CV, khởi đầu quy trình tuyển dụng tự động.",
-      image:
-        "https://recruitment.mekongai.com/api/v1/tmp/upload cv.png",
-    },
+    // {
+    //   icon: UploadCloud,
+    //   title: "Tải CV Thông Minh",
+    //   description:
+    //     "Ứng viên dễ dàng tải CV, khởi đầu quy trình tuyển dụng tự động.",
+    //   image:
+    //     "https://recruitment.mekongai.com/api/v1/tmp/upload cv.png",
+    // },
     {
       icon: BrainCircuit,
       title: "AI Phân Tích & Sàng Lọc",
       description:
         "AI tự động so khớp CV với JD, đánh giá và phân loại ứng viên.",
       image:
-        "https://recruitment.mekongai.com/api/v1/tmp/danhgiacv.png",
+        "https://recruitment.mekongai.com/api/v1/tmp/AI_phantichCV.png",
     },
     {
       icon: FileQuestion,
-      title: "Tạo Câu Hỏi Phỏng Vấn AI",
+      title: "Tạo câu hỏi & Phỏng vấn",
       description:
-        "Hệ thống AI tạo bộ câu hỏi phỏng vấn cá nhân hóa dựa trên JD & CV.",
+        "Hệ thống AI tạo bộ câu hỏi phỏng vấn cá nhân hóa dựa trên JD & CV. Ứng viên tương tác, trả lời phỏng vấn trực tiếp với trợ lý AI.",
       image:
-        "https://recruitment.mekongai.com/api/v1/tmp/Ai_question.png",
+        "https://recruitment.mekongai.com/api/v1/tmp/chatbot_AI.png",
     },
-    {
-      icon: Bot,
-      title: "Phỏng Vấn Sơ Bộ Với AI",
-      description:
-        "Ứng viên tương tác, trả lời phỏng vấn trực tiếp với trợ lý AI.",
-      image:
-        "https://recruitment.mekongai.com/api/v1/tmp/chat.png",
-    },
+    // {
+    //   icon: Bot,
+    //   title: "Phỏng Vấn Sơ Bộ Với AI",
+    //   description:
+    //     "Ứng viên tương tác, trả lời phỏng vấn trực tiếp với trợ lý AI.",
+    //   image:
+    //     "https://recruitment.mekongai.com/api/v1/tmp/chatbot_AI.png",
+    // },
     {
       icon: ClipboardCheck,
-      title: "Báo Cáo & Đánh Giá",
+      title: "Thống kê & Đánh Giá",
       description:
         "AI tổng hợp kết quả, đánh giá chi tiết và gửi báo cáo cho HR.",
       image:
-        "https://recruitment.mekongai.com/api/v1/tmp/main.png",
+        "https://recruitment.mekongai.com/api/v1/tmp/AI_report.png",
     },
-    {
-      icon: CalendarClock,
-      title: "HR Quyết Định & Lên Lịch",
-      description:
-        "HR xem xét CV, đánh giá AI, và đặt lịch phỏng vấn qua Google Calendar.",
-      image:
-        "https://recruitment.mekongai.com/api/v1/tmp/datlichpv.png",
-    },
+    // {
+    //   icon: CalendarClock,
+    //   title: "HR Quyết Định & Lên Lịch",
+    //   description:
+    //     "HR xem xét CV, đánh giá AI, và đặt lịch phỏng vấn qua Google Calendar.",
+    //   image:
+    //     "https://recruitment.mekongai.com/api/v1/tmp/datlichpv.png",
+    // },
   ];
 
   const navLinks = [
