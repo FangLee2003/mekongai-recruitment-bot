@@ -67,6 +67,7 @@ export default function CandidateList({
     return true;
   });
 
+  // // Màu status
   // const statusColors = {
   //   "Phù hợp": "text-green-600 bg-green-100",
   //   "Không phù hợp": "text-red-600 bg-red-100",
