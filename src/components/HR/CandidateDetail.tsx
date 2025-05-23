@@ -130,12 +130,48 @@ export default function CandidateDetail({ cvId }: Props) {
         </div>
       </div>
 
-      <section
-        className="bg-blue-50/60 rounded-xl border border-blue-200 p-6 text-gray-700 text-base leading-relaxed
-          shadow-inner max-w-3xl mx-auto mb-10 whitespace-pre-line"
-      >
-        {cvData.evaluate}
-      </section>
+<>
+  <style>{`
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+    .custom-table th, .custom-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      border: 1px solid #ddd;
+    }
+    .custom-table th {
+      background: linear-gradient(90deg,rgb(41, 73, 189), #2f2f81);
+      color: white;
+      font-weight: bold;
+    }
+    .custom-table td {
+      background-color: #f9f9f9;
+    }
+    .custom-table tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+    .custom-table tbody tr:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+    .custom-table tbody tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+  `}</style>
+
+  <section
+    className="rounded-2xl border border-blue-200 p-6 text-gray-700 text-base leading-relaxed
+      shadow-inner mx-auto mb-10"
+    dangerouslySetInnerHTML={{ __html: cvData.evaluate.replace('<table', '<table class="custom-table"') }}
+  />
+</>
+
+
 
       <div className="text-center mb-10">
         <a
