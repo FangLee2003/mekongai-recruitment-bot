@@ -13,7 +13,6 @@ interface Props {
   onSendToCandidate: (cvId: string) => void; // nút gửi CV cho ứng viên vòng 2
   onScheduleInterview: (cvId: string) => void; // nút đặt lịch phỏng vấn vòng 2
   onNotifyHired: (cvId: string) => void; // nút thông báo trúng tuyển vòng 3
-  onGenerateChart: (cvId: string) => void; // nút tạo biểu đồ vòng 2
 }
 
 export default function CandidateList({
@@ -24,8 +23,7 @@ export default function CandidateList({
   onApproveCV,
   onSendToCandidate,
   onScheduleInterview,
-  onNotifyHired,
-  onGenerateChart
+  onNotifyHired
 }: Props) {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(false);
@@ -171,14 +169,6 @@ export default function CandidateList({
                     >
                       <FaComments size={20} />
                     </button>
-
-                    <button
-                      onClick={() => onGenerateChart(String(c.cv_id))}
-                      className="px-4 py-2 rounded-full bg-purple-500 text-white font-semibold hover:bg-green-600 transition"
-                    >
-                      Tạo biểu đồ
-                    </button>
-
                     <button
                       onClick={() => onScheduleInterview(String(c.cv_id))}
                       className="px-4 py-2 rounded-full bg-green-500 text-white font-semibold hover:bg-green-600 transition"
