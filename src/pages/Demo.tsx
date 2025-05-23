@@ -15,6 +15,8 @@ import { generateQuestionSet } from "../services/interview";
 
 import type { UploadedCV } from "../types";
 
+import Layout from "../layouts";
+
 export default function Demo() {
   const [uploadedCV, setUploadedCV] = useState<UploadedCV | null>(null);
   const [selectedJdId, setSelectedJdId] = useState("1"); // Ứng viên
@@ -64,6 +66,7 @@ export default function Demo() {
   };
 
   return (
+    <Layout>
     <div className="flex h-screen">
       {/* HR SIDE */}
       <div className="w-1/2 bg-white p-4 overflow-y-auto">
@@ -147,5 +150,6 @@ export default function Demo() {
         {selectedCVId && <ChatHistory cvId={selectedCVId} />}
       </AnimatedModal>
     </div>
+    </Layout>
   );
 }

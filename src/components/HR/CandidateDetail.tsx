@@ -130,8 +130,19 @@ export default function CandidateDetail({ cvId }: Props) {
         </div>
       </div>
 
-<>
-  <style>{`
+      <div className="text-center mb-10">
+        <a
+          href={cvData.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block text-blue-700 font-semibold underline
+            hover:text-blue-900 transition-colors"
+        >
+          📄 Xem CV gốc (PDF)
+        </a>
+      </div>
+      <>
+        <style>{`
     .custom-table {
       width: 100%;
       border-collapse: collapse;
@@ -162,28 +173,15 @@ export default function CandidateDetail({ cvId }: Props) {
     .custom-table tbody tr:nth-child(even) {
       background-color: #f1f1f1;
     }
-  `}</style>
+  `}
+        </style>
 
-  <section
-    className="rounded-2xl border border-blue-200 p-6 text-gray-700 text-base leading-relaxed
+        <section
+          className="rounded-2xl border border-blue-200 p-6 text-gray-700 text-base leading-relaxed
       shadow-inner mx-auto mb-10"
-    dangerouslySetInnerHTML={{ __html: cvData.evaluate.replace('<table', '<table class="custom-table"') }}
-  />
-</>
-
-
-
-      <div className="text-center mb-10">
-        <a
-          href={cvData.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block text-blue-700 font-semibold underline
-            hover:text-blue-900 transition-colors"
-        >
-          📄 Xem CV gốc (PDF)
-        </a>
-      </div>
+          dangerouslySetInnerHTML={{ __html: cvData.evaluate.replace('<table', '<table class="custom-table"') }}
+        />
+      </>
     </div>
   );
 }
