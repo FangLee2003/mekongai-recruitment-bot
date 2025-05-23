@@ -145,7 +145,7 @@ const App: React.FC = () => {
         <section className="container mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
             Tuyển Dụng Thông Minh Hơn, Nhanh Hơn Với{" "}
-            <span className="text-sky-600">Sức Mạnh AI</span>
+            <span className="text-sky-600">MekRec AI</span>
           </h2>
           <p className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto mb-10">
             Nền tảng AI tự động hóa quy trình tuyển dụng, từ sàng lọc CV đến
@@ -187,7 +187,7 @@ const App: React.FC = () => {
                 Tính Năng Vượt Trội
               </h3>
               <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                Khám phá các công cụ AI mạnh mẽ giúp tối ưu hóa mọi bước trong
+                Khám phá các công cụ AI mạnh mẽ giúp tự động hóa
                 quy trình tuyển dụng của bạn.
               </p>
             </div>

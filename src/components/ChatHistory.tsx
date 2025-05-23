@@ -20,7 +20,7 @@ export default function ChatHistory({ cvId }: Props) {
         const data = await fetchInterviewHistory(cvId);
 
         if (Array.isArray(data) && data.length > 0) {
-          const messages: ChatMessage[] = data.flatMap((item: any) => [
+          const messages: ChatMessage[] = data.flatMap((item) => [
             { type: "question", text: item.query },
             { type: "answer", text: item.answer },
           ]);

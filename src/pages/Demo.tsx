@@ -7,7 +7,7 @@ import CVUploader from "../components/Candidate/CVUploader";
 import Invitation from "../components/Candidate/Invitation";
 import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
-import AnimatedModal from "../components/AnimatedModal";
+import AnimatedModal from "../components/Modal/AnimatedModal";
 
 import { FiUsers, FiUserCheck } from "react-icons/fi";
 
@@ -91,7 +91,7 @@ export default function Demo() {
           Ứng viên
         </h2>
         <JDViewer onChange={setSelectedJdId} />
-        {(!uploadedCV && viewState !== "invited") && (
+        {(!uploadedCV && viewState === "idle") && (
           <CVUploader
             jdId={selectedJdId}
             onUploaded={(cvData) => {
@@ -102,9 +102,6 @@ export default function Demo() {
             }}
           />
         )}
-
-        {uploadedCV && <CandidateDetail cvId={uploadedCV.cv_id} />}
-
         {viewState === "invited" && (
           <Invitation onAccept={() => setViewState("chatting")} />
         )}
@@ -128,9 +125,9 @@ export default function Demo() {
       >
         <button
           onClick={() => setDetailModalOpen(false)}
-          className="mb-4 text-right text-gray-600 hover:text-gray-900" // Consider making this button more prominent or positioned like modal close buttons
+          className="text-lg text-right text-white bg-red-500 hover:bg-red-400 py-2 px-4 rounded-full" // Consider making this button more prominent or positioned like modal close buttons
         >
-          Đóng ✕
+          ✕
         </button>
         {selectedCVId && <CandidateDetail cvId={selectedCVId} />}
       </AnimatedModal>
@@ -143,9 +140,9 @@ export default function Demo() {
       >
         <button
           onClick={() => setChatModalOpen(false)}
-          className="mb-4 text-right text-gray-600 hover:text-gray-900" // Same consideration for button styling
+          className="text-lg text-right text-white bg-red-500 hover:bg-red-400 py-2 px-4 rounded-full" // Consider making this button more prominent or positioned like modal close buttons
         >
-          Đóng ✕
+          ✕
         </button>
         {selectedCVId && <ChatHistory cvId={selectedCVId} />}
       </AnimatedModal>

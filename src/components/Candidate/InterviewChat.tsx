@@ -27,8 +27,8 @@ export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props
         if (history.length > 0) {
           // Map dữ liệu API thành message chat
           const historyMessages: Message[] = history.flatMap((item: any) => [
-            { type: "question", text: item.answer },
-            { type: "answer", text: item.query },
+            { type: "question", text: item?.answer },
+            { type: "answer", text: item?.query },
           ]);
           setMessages(historyMessages);
         } else if (initialQuestion) {
@@ -119,7 +119,7 @@ export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props
       {/* Chat messages */}
       <div
         ref={chatRef}
-        className="h-64 overflow-y-auto border p-3 mb-2 rounded space-y-3 bg-gray-50 flex flex-col"
+        className="h-120 overflow-y-auto border p-3 mb-2 rounded space-y-3 bg-gray-50 flex flex-col"
       >
         {messages.map((msg, idx) => {
           if (msg.type === "done") {

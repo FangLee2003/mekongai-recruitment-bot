@@ -73,7 +73,7 @@ export default function CVUploader({ jdId, onUploaded }: Props) {
       localStorage.setItem("cv_id", cvData.cv_id);
       onUploaded(cvData);
       setStatus("done");
-    } catch (error: any) {
+    } catch (error:any) {
       setErrorMessage(error?.message || "Upload thất bại. Vui lòng thử lại.");
       setStatus("error");
     }

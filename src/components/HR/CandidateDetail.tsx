@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ScoreChart from "../ScoreChart";
+import ScoreChart from "../Chart/ScoreChart";
 import { fetchCVFiltered } from "../../services/cv";
 
 interface CVData {
@@ -89,14 +89,13 @@ export default function CandidateDetail({ cvId }: Props) {
 
   return (
     <div className="mx-auto bg-white rounded-3xl shadow-2xl p-8 mt-6 select-none">
-      <h3 className="text-2xl font-extrabold mb-6 text-blue-800 flex items-center gap-3">
-        <span>📊</span> Đánh giá AI cho CV ID:{" "}
-        <code className="font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded">
-          {cvData.cv_id}
-        </code>
-      </h3>
-
-      <div className="flex flex-wrap gap-6 mb-8 items-center">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-extrabold text-blue-800 flex items-center gap-3">
+          <span>📊</span> Đánh giá AI cho CV ID:{" "}
+          <code className="font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded">
+            {cvData.cv_id}
+          </code>
+        </h3>
         <div
           className={`px-4 py-2 rounded-full font-semibold text-white
             ${cvData.result === "Phù hợp"
@@ -108,7 +107,6 @@ export default function CandidateDetail({ cvId }: Props) {
           {cvData.result}
         </div>
       </div>
-
       <div className="flex flex-wrap justify-center gap-10 mb-10">
         {/* Biểu đồ độ phù hợp (ScoreChart) */}
         <div className="max-w-xs">
