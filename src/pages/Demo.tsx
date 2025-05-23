@@ -111,7 +111,7 @@ const handleGenerateChart = async (cvId: string) => {
           onShowDetail={(cvId) => { setSelectedCVId(cvId); setDetailModalOpen(true); }}
           onShowChat={(cvId) => { setSelectedCVId(cvId); setChatModalOpen(true); }}
           onApproveCV={handleApproveCV}
-          onSendToCandidate={(cvId) => { console.log("Gửi CV cho ứng viên", cvId); setViewState("chatting"); setSelectedCVId(cvId); }}
+          onSendToCandidate={(cvId) => { setSelectedCVId(cvId); setViewState("chatting"); }}
           onScheduleInterview={(cvId) => { console.log("Đặt lịch phỏng vấn", cvId); }}
           onNotifyHired={(cvId) => { console.log("Thông báo trúng tuyển", cvId); }}
           onGenerateChart={handleGenerateChart}

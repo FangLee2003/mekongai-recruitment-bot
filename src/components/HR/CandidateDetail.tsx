@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ScoreChart from "../ScoreChart";
-import ChatHistory from "../ChatHistory";
 import { fetchCVFiltered } from "../../services/cv";
 
 interface CVData {
@@ -107,10 +106,6 @@ export default function CandidateDetail({ cvId }: Props) {
           📄 Xem CV gốc (PDF)
         </a>
       </div>
-
-      <section className="max-w-4xl mx-auto border-t border-gray-200 pt-6">
-        <ChatHistory cvId={cvData.cv_id} />
-      </section>
     </div>
   );
 }

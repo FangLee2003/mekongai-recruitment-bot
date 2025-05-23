@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { sendInterviewAnswer } from "../../services/interview";
+import { sendInterviewAnswer, fetchInterviewHistory } from "../../services/interview";
 
 interface Props {
   cvId: string;
@@ -12,23 +12,39 @@ type Message = {
   text: string;
 };
 
-export default function InterviewChat({
-  cvId,
-  onFinish,
-  initialQuestion,
-}: Props) {
+export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
+  // Load lịch sử phỏng vấn hoặc hiện câu hỏi đầu tiên nếu chưa có lịch sử
   useEffect(() => {
-    if (initialQuestion) {
-      setMessages([{ type: "question", text: initialQuestion }]);
+    async function loadHistory() {
+      try {
+        const history = await fetchInterviewHistory(cvId);
+        if (history.length > 0) {
+          // Map dữ liệu API thành message chat
+          const historyMessages: Message[] = history.flatMap((item: any) => [
+            { type: "question", text: item.answer },
+            { type: "answer", text: item.query },
+          ]);
+          setMessages(historyMessages);
+        } else if (initialQuestion) {
+          setMessages([{ type: "question", text: initialQuestion }]);
+        }
+      } catch (err) {
+        console.error("Lỗi tải lịch sử phỏng vấn:", err);
+        if (initialQuestion) {
+          setMessages([{ type: "question", text: initialQuestion }]);
+        }
+      }
     }
-  }, [initialQuestion]);
+    loadHistory();
+  }, [cvId, initialQuestion]);
 
+  // Auto scroll khi có message mới
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTo({
@@ -38,6 +54,7 @@ export default function InterviewChat({
     }
   }, [messages]);
 
+  // Xử lý gửi câu trả lời
   const handleSubmit = async () => {
     if (!input.trim() || isDone) return;
 
@@ -49,7 +66,7 @@ export default function InterviewChat({
     try {
       let accumulatedReply = "";
 
-      // Tạo message "question" trống để cập nhật
+      // Tạo message "question" trống để update text trả về dần dần
       setMessages((prev) => [...prev, { type: "question", text: "" }]);
 
       await sendInterviewAnswer(cvId, userAnswer, (chunk) => {
@@ -64,8 +81,11 @@ export default function InterviewChat({
         });
       });
 
+      // Kiểm tra kết thúc phỏng vấn
       if (
-        accumulatedReply.toLowerCase().includes("Buổi phỏng vấn hôm nay xin được kết thúc tại đây")
+        accumulatedReply
+          .toLowerCase()
+          .includes("buổi phỏng vấn hôm nay xin được kết thúc tại đây")
       ) {
         setMessages((msgs) => {
           const newMsgs = [...msgs];
@@ -77,6 +97,11 @@ export default function InterviewChat({
         });
         setIsDone(true);
         onFinish();
+
+        // Dọn dẹp localStorage nếu cần
+        localStorage.removeItem("question_set_ready");
+        localStorage.removeItem("question_set");
+        localStorage.setItem(`interview_done_${cvId}`, "true");
       }
     } catch (error) {
       console.error("Lỗi khi gửi câu trả lời:", error);
@@ -94,7 +119,7 @@ export default function InterviewChat({
       {/* Chat messages */}
       <div
         ref={chatRef}
-        className="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50 scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-200"
+        className="h-64 overflow-y-auto border p-3 mb-2 rounded space-y-3 bg-gray-50 flex flex-col"
       >
         {messages.map((msg, idx) => {
           if (msg.type === "done") {
@@ -109,13 +134,12 @@ export default function InterviewChat({
           }
 
           if (msg.type === "question") {
-            // AI message bên trái
             return (
               <div
                 key={idx}
-                className="max-w-[90%] px-5 py-3 rounded-t-xl rounded-br-xl break-words text-base
-            bg-white text-gray-900 border border-gray-300 shadow-sm self-start"
-                style={{ alignSelf: "flex-start" }}
+                className="self-start inline-block px-5 py-3 rounded-t-xl rounded-br-xl break-words
+                  bg-white text-gray-900 border border-gray-300 shadow-sm text-base"
+                style={{ maxWidth: "66%", width: "fit-content" }}
               >
                 {msg.text}
               </div>
@@ -123,19 +147,17 @@ export default function InterviewChat({
           }
 
           if (msg.type === "answer") {
-            // User message bên phải
             return (
               <div
                 key={idx}
-                className="max-w-[90%] px-5 py-3 rounded-t-xl rounded-bl-xl break-words text-base
-            bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg self-end"
-                style={{ alignSelf: "flex-end" }}
+                className="self-end inline-block px-5 py-3 rounded-t-xl rounded-bl-xl break-words
+                  bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg text-base"
+                style={{ maxWidth: "66%", width: "fit-content" }}
               >
                 {msg.text}
               </div>
             );
           }
-
           return null;
         })}
       </div>
@@ -176,11 +198,7 @@ export default function InterviewChat({
             stroke="currentColor"
             strokeWidth={2}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M14 5l7 7m0 0l-7 7m7-7H3"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </button>
       </form>
