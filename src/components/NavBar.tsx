@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Zap, Sparkles, Menu, X } from "lucide-react";
 
 const navLinks = [

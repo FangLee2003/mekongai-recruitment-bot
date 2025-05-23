@@ -1,11 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { uploadCV } from "../../services/cv";
-import type { UploadedCV } from "../../types";
+import type { CV } from "../../types";
 
 interface Props {
   jdId: string;
-  onUploaded: (cvData: UploadedCV) => void;
+  onUploaded: (cvData: CV) => void;
 }
 
 const fileTypeIcons: Record<string, React.JSX.Element> = {

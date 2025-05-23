@@ -1,4 +1,4 @@
-export interface UploadedCV {
+export interface CV {
     cv_id: string;
     url: string;
     jd_id: string;
@@ -25,4 +25,19 @@ export interface Candidate {
     evaluate: string;
     url: string;
     status: number;
+}
+
+export interface Radar {
+  labels: string[];
+  datasets: Array<{
+    label: string;
+    data: number[];
+    fill?: boolean;
+    backgroundColor?: string;
+    borderColor?: string;
+    pointBackgroundColor?: string;
+    pointBorderColor?: string;
+    pointHoverBackgroundColor?: string;
+    pointHoverBorderColor?: string;
+  }>;
 }

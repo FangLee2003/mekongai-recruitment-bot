@@ -13,12 +13,12 @@ import { FiUsers, FiUserCheck } from "react-icons/fi";
 
 import { generateQuestionSet } from "../services/interview";
 
-import type { UploadedCV } from "../types";
+import type { CV } from "../types";
 
 import Layout from "../layouts";
 
 export default function Demo() {
-  const [uploadedCV, setUploadedCV] = useState<UploadedCV | null>(null);
+  const [uploadedCV, setUploadedCV] = useState<CV | null>(null);
   const [selectedJdId, setSelectedJdId] = useState("1"); // Ứng viên
   const [selectedJdHRId, setSelectedJdHRId] = useState("1"); // HR
   const [selectedCVId, setSelectedCVId] = useState(

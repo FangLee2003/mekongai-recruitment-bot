@@ -67,3 +67,18 @@ export async function evaluateCV(cvId: string) {
   if (!res.ok) throw new Error("Lỗi đánh giá CV");
   return await res.json();
 }
+
+export async function fetchRadarChart(cvId: string) {
+  const res = await fetch(`${BASE_URL}/v1/generate-chart`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cv_id: cvId }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Lỗi khi lấy biểu đồ radar (status: ${res.status})`);
+  }
+  
+  return await res.json(); 
+
+}
