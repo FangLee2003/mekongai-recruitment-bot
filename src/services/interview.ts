@@ -3,7 +3,11 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 /**
  * Gửi câu trả lời phỏng vấn và nhận phản hồi từ AI (dạng stream)
  */
-export async function sendInterviewAnswer(cvId: string, answer: string): Promise<string> {
+export async function sendInterviewAnswer(
+  cvId: string,
+  answer: string,
+  onChunk: (chunk: string) => void
+): Promise<void> {
   const res = await fetch(`${BASE_URL}/v1/chatbot-recruitment-stream`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -14,16 +18,15 @@ export async function sendInterviewAnswer(cvId: string, answer: string): Promise
 
   const reader = res.body.getReader();
   const decoder = new TextDecoder("utf-8");
-  let result = "";
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-    result += decoder.decode(value, { stream: true });
+    const chunk = decoder.decode(value, { stream: true });
+    onChunk(chunk);  // gọi callback khi có dữ liệu mới
   }
-
-  return result;
 }
+
 
 /**
  * Lấy lịch sử cuộc trò chuyện phỏng vấn

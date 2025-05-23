@@ -9,6 +9,8 @@ import InterviewChat from "../components/Candidate/InterviewChat";
 import ChatHistory from "../components/ChatHistory";
 import AnimatedModal from "../components/AnimatedModal";
 
+import { FiUsers, FiUserCheck } from "react-icons/fi";
+
 import { generateQuestionSet } from "../services/interview";
 
 import type { UploadedCV } from "../types";
@@ -25,6 +27,8 @@ export default function Demo() {
 
   const [viewState, setViewState] = useState("idle");
   console.log("viewState", viewState);
+
+  const [refreshFlag, setRefreshFlag] = useState(0);
 
   useEffect(() => {
     const cvId = localStorage.getItem("cv_id");
@@ -50,6 +54,7 @@ export default function Demo() {
 
       // Chuyển trạng thái viewState sang "invited" để hiện Invitation và chờ ứng viên trả lời
       setViewState("invited");
+      setRefreshFlag((prev) => prev + 1);
 
       // Nếu cần có thể thông báo thành công
     } catch (error) {
@@ -62,13 +67,18 @@ export default function Demo() {
     <div className="flex h-screen">
       {/* HR SIDE */}
       <div className="w-1/2 bg-gray-100 p-4 overflow-y-auto">
+        <h2 className="flex items-center text-2xl font-semibold text-blue-800 mb-4">
+          <FiUsers className="mr-2" />
+          Doanh nghiệp (HR)
+        </h2>
         <JDViewerEditor onChange={setSelectedJdHRId} />
         <CandidateList
           jdId={selectedJdHRId}
+          refreshFlag={refreshFlag}
           onShowDetail={(cvId) => { setSelectedCVId(cvId); setDetailModalOpen(true); }}
           onShowChat={(cvId) => { setSelectedCVId(cvId); setChatModalOpen(true); }}
           onApproveCV={handleApproveCV}
-          onSendToCandidate={(cvId) => { console.log("Gửi CV cho ứng viên", cvId); }}
+          onSendToCandidate={(cvId) => { console.log("Gửi CV cho ứng viên", cvId); setViewState("chatting"); }}
           onScheduleInterview={(cvId) => { console.log("Đặt lịch phỏng vấn", cvId); }}
           onNotifyHired={(cvId) => { console.log("Thông báo trúng tuyển", cvId); }}
         />
@@ -76,6 +86,10 @@ export default function Demo() {
 
       {/* CANDIDATE SIDE */}
       <div className="w-1/2 bg-white p-4 overflow-y-auto border-l">
+        <h2 className="flex items-center text-2xl font-semibold text-blue-800 mb-4">
+          <FiUserCheck className="mr-2" />
+          Ứng viên
+        </h2>
         <JDViewer onChange={setSelectedJdId} />
         {(!uploadedCV && viewState !== "invited") && (
           <CVUploader
@@ -84,6 +98,7 @@ export default function Demo() {
               localStorage.setItem("cv_id", cvData.cv_id);
               setUploadedCV(cvData);
               setViewState("evaluated");
+              setRefreshFlag((prev) => prev + 1);
             }}
           />
         )}

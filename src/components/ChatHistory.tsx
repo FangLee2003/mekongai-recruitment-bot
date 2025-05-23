@@ -19,9 +19,7 @@ export default function ChatHistory({ cvId }: Props) {
       try {
         const data = await fetchInterviewHistory(cvId);
 
-        // data là mảng chứa 1 mảng messages
         if (Array.isArray(data) && data.length > 0) {
-          // Map thành mảng ChatMessage[]
           const messages: ChatMessage[] = data.flatMap((item: any) => [
             { type: "question", text: item.query },
             { type: "answer", text: item.answer },
@@ -49,21 +47,45 @@ export default function ChatHistory({ cvId }: Props) {
   }
 
   return (
-    <div className="bg-white p-4 rounded shadow ">
-      <h3 className="font-semibold mb-2">🗂 Lịch sử bài phỏng vấn</h3>
+    <div className="flex flex-col h-[400px] mx-auto bg-white rounded-xl shadow-xl overflow-hidden mt-6">
+      <header className="bg-blue-600 text-white px-6 py-3 font-semibold text-lg select-none">
+        🗂 Lịch sử bài phỏng vấn
+      </header>
 
-      <div className="h-72 overflow-y-auto border p-3 space-y-2 bg-gray-50 rounded">
-        {history.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`max-w-xs px-3 py-2 rounded-lg text-sm ${msg.type === "question"
-                ? "bg-gray-300 text-left self-start"
-                : "bg-blue-500 text-white text-right self-end ml-auto"
-              }`}
-          >
-            {msg.text}
-          </div>
-        ))}
+      <div
+        className="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50 scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-200"
+      >
+        {history.map((msg, idx) => {
+          if (msg.type === "question") {
+            // AI message bên trái
+            return (
+              <div
+                key={idx}
+                className="max-w-[90%] px-5 py-3 rounded-t-xl rounded-br-xl break-words text-base
+                  bg-white text-gray-900 border border-gray-300 shadow-sm self-start"
+                style={{ alignSelf: "flex-start" }}
+              >
+                {msg.text}
+              </div>
+            );
+          }
+
+          if (msg.type === "answer") {
+            // User message bên phải
+            return (
+              <div
+                key={idx}
+                className="max-w-[90%] px-5 py-3 rounded-t-xl rounded-bl-xl break-words text-base
+                  bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg self-end"
+                style={{ alignSelf: "flex-end" }}
+              >
+                {msg.text}
+              </div>
+            );
+          }
+
+          return null;
+        })}
       </div>
     </div>
   );
