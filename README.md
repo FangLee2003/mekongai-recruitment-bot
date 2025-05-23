@@ -1,54 +1,94 @@
-# React + TypeScript + Vite
+# MekongAI Recruitment Automation System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Hệ thống AI tự động hóa quy trình tuyển dụng hỗ trợ doanh nghiệp (HR) và ứng viên tương tác trực tiếp qua giao diện web, tích hợp AI để đánh giá CV, tạo bộ câu hỏi phỏng vấn, phỏng vấn tự động, và quản lý lịch sử.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Mục lục
 
-## Expanding the ESLint configuration
+- [Giới thiệu](#giới-thiệu)
+- [Tính năng chính](#tính-năng-chính)
+- [Kiến trúc dự án](#kiến-trúc-dự-án)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Cài đặt & chạy dự án](#cài-đặt--chạy-dự-án)
+- [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+- [API tích hợp](#api-tích-hợp)
+- [Luồng nghiệp vụ](#luồng-nghiệp-vụ)
+- [Hướng phát triển & mở rộng](#hướng-phát-triển--mở-rộng)
+- [Đóng góp](#đóng-góp)
+- [Liên hệ](#liên-hệ)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Giới thiệu
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+MekongAI Recruitment Automation System là giải pháp tối ưu quy trình tuyển dụng bằng trí tuệ nhân tạo:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Đánh giá tự động CV ứng viên theo JD tuyển dụng
+- Tạo bộ câu hỏi phỏng vấn tự động dựa trên CV và JD
+- Giao diện phỏng vấn chat tương tác AI – ứng viên trả lời, AI đặt câu hỏi tiếp
+- Quản lý trạng thái vòng tuyển dụng, lịch sử phỏng vấn, và tương tác realtime
+- Hỗ trợ HR quản lý danh sách ứng viên, đánh giá và ra quyết định
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+---
+
+## Tính năng chính
+
+- **Landing page** giới thiệu hệ thống
+- **Trang demo** chia 2 màn hình:
+  - Bên HR: Quản lý JD, danh sách ứng viên, đánh giá CV, tạo và gửi bộ câu hỏi, xem lịch sử chat
+  - Bên ứng viên: Xem JD, upload CV, tham gia phỏng vấn AI theo bộ câu hỏi, xem kết quả đánh giá
+- **Quản lý vòng tuyển dụng**: Vòng 1 (upload, đánh giá CV), vòng 2 (phỏng vấn AI), vòng 3 (thông báo trúng tuyển)
+- **Tích hợp API Backend**: Đánh giá CV, tạo câu hỏi, gửi câu trả lời phỏng vấn, lấy lịch sử phỏng vấn
+- **Modal chi tiết ứng viên & lịch sử chat**
+- **Tương tác realtime, UI mượt mà với React, TailwindCSS và framer-motion**
+
+---
+
+## Kiến trúc dự án
+
+- **Frontend**: React 18 + Vite + TypeScript + TailwindCSS
+- **Backend API**: Restful APIs tại https://recruitment.mekongai.com
+- **Thư viện hỗ trợ**:
+  - `react-router-dom` cho routing
+  - `react-modal` & `framer-motion` cho modal animation
+  - `axios` & `fetch` để gọi API
+  - `react-icons` cho icon UI
+- **Triển khai**: Build static bằng Vite, preview bằng `vite preview` hoặc serve tĩnh
+
+---
+
+## Công nghệ sử dụng
+
+- React + TypeScript
+- Vite (build & dev server)
+- TailwindCSS (UI nhanh & responsive)
+- Framer Motion (animation UI)
+- React Modal (modal popup)
+- Axios / Fetch API
+- Git / GitHub (quản lý mã nguồn)
+
+---
+
+## Cài đặt & chạy dự án
+
+```bash
+# Clone repo
+git clone https://github.com/your-repo/mekongai-recruitment.git
+cd mekongai-recruitment
+
+# Cài đặt dependencies
+npm install
+# hoặc yarn install
+
+# Chạy dev server
+npm run dev
+# hoặc yarn dev
+
+# Build project
+npm run build
+# hoặc yarn build
+
+# Preview bản build
+npm run preview
+# hoặc serve -s dist
