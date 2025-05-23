@@ -78,7 +78,7 @@ export default function Demo() {
           onShowDetail={(cvId) => { setSelectedCVId(cvId); setDetailModalOpen(true); }}
           onShowChat={(cvId) => { setSelectedCVId(cvId); setChatModalOpen(true); }}
           onApproveCV={handleApproveCV}
-          onSendToCandidate={(cvId) => { console.log("Gửi CV cho ứng viên", cvId); setViewState("chatting"); }}
+          onSendToCandidate={(cvId) => { console.log("Gửi CV cho ứng viên", cvId); setViewState("chatting"); setSelectedCVId(cvId); }}
           onScheduleInterview={(cvId) => { console.log("Đặt lịch phỏng vấn", cvId); }}
           onNotifyHired={(cvId) => { console.log("Thông báo trúng tuyển", cvId); }}
         />
@@ -110,7 +110,7 @@ export default function Demo() {
         )}
         {viewState === "chatting" && (
           <InterviewChat
-            cvId={localStorage.getItem("cv_id") || ""}
+            cvId={selectedCVId || ""}
             onFinish={() => setViewState("done")}
             initialQuestion="Rất vui được gặp bạn! Tôi là AI phỏng vấn viên của MekongAI, sẽ đồng hành cùng bạn trong buổi phỏng vấn hôm nay. Bạn đã sẵn sàng để bắt đầu chưa?"
           />
