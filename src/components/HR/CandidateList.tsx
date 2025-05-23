@@ -67,11 +67,10 @@ export default function CandidateList({
     return true;
   });
 
-  // Màu status
-  const statusColors = {
-    "Phù hợp": "text-green-600 bg-green-100",
-    "Không phù hợp": "text-red-600 bg-red-100",
-  };
+  // const statusColors = {
+  //   "Phù hợp": "text-green-600 bg-green-100",
+  //   "Không phù hợp": "text-red-600 bg-red-100",
+  // };
 
   return (
     <div className="mx-auto bg-white rounded-xl p-6 border-2 border-blue-700 shadow-lg transition hover:shadow-xl hover:border-blue-800">
