@@ -25,7 +25,7 @@ const App: React.FC = () => {
       description:
         "Ứng viên dễ dàng tải CV, khởi đầu quy trình tuyển dụng tự động.",
       image:
-        "https://prnt.sc/PIJ53BAo-ReV",
+        "https://recruitment.mekongai.com/api/v1/tmp/upload cv.png",
     },
     {
       icon: BrainCircuit,
@@ -33,7 +33,7 @@ const App: React.FC = () => {
       description:
         "AI tự động so khớp CV với JD, đánh giá và phân loại ứng viên.",
       image:
-        "https://placehold.co/600x400/E2E8F0/4A5568?text=AI+Phân+Tích",
+        "https://recruitment.mekongai.com/api/v1/tmp/danhgiacv.png",
     },
     {
       icon: FileQuestion,
@@ -41,7 +41,7 @@ const App: React.FC = () => {
       description:
         "Hệ thống AI tạo bộ câu hỏi phỏng vấn cá nhân hóa dựa trên JD & CV.",
       image:
-        "https://placehold.co/600x400/E2E8F0/4A5568?text=Câu+Hỏi+AI",
+        "https://recruitment.mekongai.com/api/v1/tmp/Ai_question.png",
     },
     {
       icon: Bot,
@@ -49,7 +49,7 @@ const App: React.FC = () => {
       description:
         "Ứng viên tương tác, trả lời phỏng vấn trực tiếp với trợ lý AI.",
       image:
-        "https://placehold.co/600x400/E2E8F0/4A5568?text=AI+Chatbot",
+        "https://recruitment.mekongai.com/api/v1/tmp/chat.png",
     },
     {
       icon: ClipboardCheck,
@@ -57,7 +57,7 @@ const App: React.FC = () => {
       description:
         "AI tổng hợp kết quả, đánh giá chi tiết và gửi báo cáo cho HR.",
       image:
-        "https://placehold.co/600x400/E2E8F0/4A5568?text=Báo+Cáo",
+        "https://recruitment.mekongai.com/api/v1/tmp/main.png",
     },
     {
       icon: CalendarClock,
@@ -65,7 +65,7 @@ const App: React.FC = () => {
       description:
         "HR xem xét CV, đánh giá AI, và đặt lịch phỏng vấn qua Google Calendar.",
       image:
-        "https://placehold.co/600x400/E2E8F0/4A5568?text=Lên+Lịch+HR",
+        "https://recruitment.mekongai.com/api/v1/tmp/datlichpv.png",
     },
   ];
 
@@ -170,7 +170,7 @@ const App: React.FC = () => {
           </div>
           <div className="mt-16 md:mt-24">
             <img
-              src="https://placehold.co/1200x600/E0E7FF/3B82F6?text=Minh+Họa+Quy+Trình+AI+Tuyển+Dụng"
+              src="https://recruitment.mekongai.com/api/v1/tmp/main.png"
               alt="AI Recruitment Process Illustration"
               className="rounded-xl shadow-2xl mx-auto max-w-5xl w-full"
               onError={(e) => {
@@ -265,17 +265,24 @@ const App: React.FC = () => {
                   },
                   {
                     icon: Bot,
-                    title: "Bước 3: Tương Tác AI",
+                    title: "Bước 3: HR duyệt ứng viên và tạo bộ câu hỏi phỏng vấn",
                     description:
-                      "AI tiến hành phỏng vấn sơ bộ (nếu có) hoặc tạo câu hỏi chuyên sâu cho HR.",
+                      "AI tiến hành tạo bộ câu hỏi chuyên sâu cho HR.",
                     align: "left",
                   },
                   {
-                    icon: ClipboardCheck,
-                    title: "Bước 4: Nhận Kết Quả",
+                    icon: Bot,
+                    title: "Bước 4: Tương Tác AI",
                     description:
-                      "HR nhận báo cáo chi tiết, danh sách ứng viên tiềm năng và hỗ trợ ra quyết định.",
+                      "Ứng viên tương tác với AI trong quá trình phỏng vấn.",
                     align: "right",
+                  },
+                  {
+                    icon: ClipboardCheck,
+                    title: "Bước 5: Nhận Kết Quả và Đặt Lịch Phỏng Vấn",
+                    description:
+                      "HR nhận báo cáo chi tiết, bao gồm thông tin câu trả lời để hỗ trợ ra quyết định. Đặt lịch phỏng vấn qua Google Calendar.",
+                    align: "left",
                   },
                 ].map((step, index) => (
                   <div
