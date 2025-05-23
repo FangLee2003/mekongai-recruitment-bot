@@ -40,6 +40,39 @@ export default function Demo() {
     else if (cvId && isInvited) setViewState("invited");
   }, []);
 
+  const [chartModalOpen, setChartModalOpen] = useState(false);
+const [chartHtml, setChartHtml] = useState<string>("");
+
+const handleGenerateChart = async (cvId: string) => {
+  try {
+    const res = await fetch(`https://recruitment.mekongai.com/api/v1/generate-chart`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cv_id: cvId }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Lỗi khi gọi API: ${res.status} ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    // console.log("Biểu đồ trả về:", json.data);
+
+    // Giả sử json có dạng { data: "<html hoặc svg ...>" }
+    if (!json.data) {
+      throw new Error("API trả về dữ liệu biểu đồ rỗng");
+    }
+
+    setChartHtml(json.data);
+    setChartModalOpen(true);
+  } catch (error) {
+    console.error("Lỗi khi lấy biểu đồ:", error);
+    // Có thể hiển thị thông báo lỗi UI nếu muốn
+  }
+};
+
+
+ 
   // Xử lý duyệt CV
   const handleApproveCV = async (cvId: string) => {
     try {
@@ -81,6 +114,7 @@ export default function Demo() {
           onSendToCandidate={(cvId) => { console.log("Gửi CV cho ứng viên", cvId); setViewState("chatting"); setSelectedCVId(cvId); }}
           onScheduleInterview={(cvId) => { console.log("Đặt lịch phỏng vấn", cvId); }}
           onNotifyHired={(cvId) => { console.log("Thông báo trúng tuyển", cvId); }}
+          onGenerateChart={handleGenerateChart}
         />
       </div>
 
@@ -149,6 +183,26 @@ export default function Demo() {
         </button>
         {selectedCVId && <ChatHistory cvId={selectedCVId} />}
       </AnimatedModal>
+
+      <AnimatedModal
+  isOpen={chartModalOpen}
+  onRequestClose={() => setChartModalOpen(false)}
+  contentLabel="Biểu đồ thống kê"
+  // className="max-w-4xl max-h-[80vh] overflow-auto p-4 bg-white rounded-lg shadow-lg"
+>
+  <button
+    onClick={() => setChartModalOpen(false)}
+    className="mb-4 text-right text-gray-600 hover:text-gray-900"
+  >
+    Đóng ✕
+  </button>
+  <div
+    style={{ width: "100%", height: "500px", overflow: "auto" }}
+    dangerouslySetInnerHTML={{ __html: chartHtml }}
+  />
+</AnimatedModal>
+
+
     </div>
   );
 }
