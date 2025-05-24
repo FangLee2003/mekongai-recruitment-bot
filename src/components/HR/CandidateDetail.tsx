@@ -8,6 +8,14 @@ interface Props {
   cvId: string;
 }
 
+interface EvaluationItem {
+  criterion: string;
+  description: string;
+  weight: number;
+  score: number;
+  analysis: string;
+}
+
 export default function CandidateDetail({ cvId }: Props) {
   const [cvData, setCvData] = useState<CV | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +23,7 @@ export default function CandidateDetail({ cvId }: Props) {
   const [radarData, setRadarData] = useState<Radar | null>(null);
   const [radarLoading, setRadarLoading] = useState(false);
 
-  console.log("CV Data:", cvData);
+  const [parsedEvaluate, setParsedEvaluate] = useState<EvaluationItem[]>([]);
 
   useEffect(() => {
     if (!cvId) return;
@@ -25,7 +33,21 @@ export default function CandidateDetail({ cvId }: Props) {
       try {
         const data = await fetchCVFiltered(cvId);
         if (Array.isArray(data) && data.length > 0) {
-          setCvData(data[0]);
+          const item = data[0];
+          setCvData(item);
+
+          // ép kiểu evaluate nếu là string
+          let evaluateData: EvaluationItem[] = [];
+          try {
+            evaluateData =
+              typeof item.evaluate === "string"
+                ? JSON.parse(item.evaluate)
+                : item.evaluate;
+          } catch (e) {
+            console.error("Lỗi khi parse evaluate:", e);
+            evaluateData = [];
+          }
+          setParsedEvaluate(evaluateData);
         } else {
           setCvData(null);
         }
@@ -40,15 +62,15 @@ export default function CandidateDetail({ cvId }: Props) {
     const loadRadar = async (cvId: string) => {
       setRadarLoading(true);
       try {
-        const data = await fetchRadarChart(cvId);
-        setRadarData(data.data);
+        const res = await fetchRadarChart(cvId);
+        setRadarData(res.data);
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu radar:", error);
         setRadarData(null);
       } finally {
         setRadarLoading(false);
       }
-    }
+    };
 
     loadCVData();
     loadRadar(cvId);
@@ -70,7 +92,7 @@ export default function CandidateDetail({ cvId }: Props) {
 
   return (
     <div className="mx-auto bg-white rounded-3xl shadow-2xl p-8 mt-6 select-none">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex gap-4 justify-between items-center mb-6">
         <h3 className="text-2xl font-extrabold text-blue-800 flex items-center gap-3">
           <span>📊</span> Đánh giá AI cho CV ID:{" "}
           <code className="font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded">
@@ -78,22 +100,24 @@ export default function CandidateDetail({ cvId }: Props) {
           </code>
         </h3>
         <div
-          className={`px-4 py-2 rounded-full font-semibold text-white
+          className={`px-4 py-2 rounded-full font-semibold text-white shadow-md
             ${cvData.result === "Phù hợp"
               ? "bg-gradient-to-r from-green-500 to-green-600"
               : "bg-gradient-to-r from-red-500 to-red-600"
-            }
-            shadow-md`}
+            }`}
         >
           {cvData.result} - {cvData.score}%
         </div>
       </div>
-      {/* RadarChart chiếm 2/3 chiều rộng */}
-      <div className="h-180 items-center justify-center">
+
+      {/* Radar Chart */}
+      <div className="flex justify-center my-6">
         {radarLoading && <p>Đang tải biểu đồ radar...</p>}
 
-        {!radarLoading && radarData && radarData.labels && radarData.datasets && (
-          <RadarChart labels={radarData.labels} datasets={radarData.datasets} />
+        {!radarLoading && radarData?.labels && radarData?.datasets && (
+          <div className="w-full max-w-2xl">
+            <RadarChart labels={radarData.labels} datasets={radarData.datasets} />
+          </div>
         )}
 
         {!radarLoading && (!radarData || !radarData.labels || !radarData.datasets) && (
@@ -101,6 +125,7 @@ export default function CandidateDetail({ cvId }: Props) {
         )}
       </div>
 
+      {/* Link xem CV gốc */}
       <div className="text-center mb-10">
         <a
           href={cvData.url}
@@ -112,8 +137,10 @@ export default function CandidateDetail({ cvId }: Props) {
           📄 Xem CV gốc (PDF)
         </a>
       </div>
-      {cvData.evaluate && Array.isArray(cvData.evaluate) && (
-        <CandidateEvaluationTable evaluate={cvData.evaluate} />
+
+      {/* Bảng đánh giá chi tiết */}
+      {parsedEvaluate.length > 0 && (
+        <CandidateEvaluationTable evaluate={parsedEvaluate} />
       )}
     </div>
   );
