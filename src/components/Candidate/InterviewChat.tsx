@@ -127,6 +127,10 @@ export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props
               <div
                 key={idx}
                 className="mx-auto bg-green-100 text-green-800 font-semibold px-5 py-2 rounded-full max-w-xs text-center select-none shadow-md"
+                style={{
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
+                }}
               >
                 {msg.text}
               </div>
@@ -139,7 +143,7 @@ export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props
                 key={idx}
                 className="self-start inline-block px-5 py-3 rounded-t-xl rounded-br-xl break-words
                   bg-white text-gray-900 border border-gray-300 shadow-sm text-base"
-                style={{ maxWidth: "66%", width: "fit-content" }}
+                style={{ maxWidth: "66%", width: "fit-content", whiteSpace: "pre-wrap", wordWrap: "break-word" }}
               >
                 {msg.text}
               </div>
@@ -152,7 +156,7 @@ export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props
                 key={idx}
                 className="self-end inline-block px-5 py-3 rounded-t-xl rounded-bl-xl break-words
                   bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg text-base"
-                style={{ maxWidth: "66%", width: "fit-content" }}
+                style={{ maxWidth: "66%", width: "fit-content", whiteSpace: "pre-wrap", wordWrap: "break-word" }}
               >
                 {msg.text}
               </div>
