@@ -112,7 +112,7 @@ export default function CandidateDetail({ cvId }: Props) {
 
       {/* Radar Chart */}
       <div className="flex justify-center my-6">
-        {radarLoading && <p>Đang tải biểu đồ radar...</p>}
+        {radarLoading && <p>Đang tải biểu đồ đánh giá ...</p>}
 
         {!radarLoading && radarData?.labels && radarData?.datasets && (
           <div className="w-full max-w-2xl">

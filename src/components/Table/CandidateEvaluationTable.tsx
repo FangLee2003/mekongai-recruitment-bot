@@ -17,10 +17,10 @@ export default function CandidateEvaluationTable({ evaluate }: Props) {
                 <thead className="bg-blue-700 text-white select-none">
                     <tr>
                         <th className="px-6 py-3 text-left font-semibold">Tiêu chí</th>
-                        <th className="px-6 py-3 text-left font-semibold">Mô tả</th>
-                        <th className="px-6 py-3 text-center font-semibold">Trọng số</th>
+                        <th className="px-6 py-3 text-left font-semibold">Mô tả tiêu chí</th>
+                        <th className="px-6 py-3 text-center font-semibold">Điểm tối đa</th>
                         <th className="px-6 py-3 text-center font-semibold">Điểm</th>
-                        <th className="px-6 py-3 text-left font-semibold">Phân tích</th>
+                        <th className="px-6 py-3 text-left font-semibold">Đánh giá ứng viên</th>
                     </tr>
                 </thead>
                 <tbody>
