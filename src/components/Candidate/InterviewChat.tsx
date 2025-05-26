@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { sendInterviewAnswer, fetchInterviewHistory } from "../../services/interview";
+import { IoIosChatboxes } from "react-icons/io";
 
 interface Props {
   cvId: string;
@@ -113,7 +114,10 @@ export default function InterviewChat({ cvId, onFinish, initialQuestion }: Props
   return (
     <div className="flex flex-col h-[500px] mx-auto bg-white rounded-xl shadow-xl overflow-hidden mt-6">
       <header className="bg-blue-600 text-white px-6 py-4 font-semibold text-lg select-none">
-        💬 Bài test phỏng vấn
+        <h5 className="flex items-center text-l font-semibold">
+          <IoIosChatboxes className="mr-2" />
+          Bài test phỏng vấn
+        </h5>
       </header>
 
       {/* Chat messages */}
