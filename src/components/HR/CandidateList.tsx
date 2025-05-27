@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchCVFiltered } from "../../services/cv";
-import { FaInfoCircle, FaComments } from "react-icons/fa";
+import { FaInfoCircle, FaComments, FaQuestionCircle } from "react-icons/fa";
 
 import type { Candidate } from "../../types";
 
@@ -10,6 +10,7 @@ interface Props {
   onShowDetail: (cvId: string) => void;
   onShowChat: (cvId: string) => void;
   onApproveCV: (cvId: string) => void; // nút duyệt CV vòng 1
+  onShowQuestions: (cvId: string) => void; // nút xem câu hỏi phỏng vấn
   onSendToCandidate: (cvId: string) => void; // nút gửi CV cho ứng viên vòng 2
   onScheduleInterview: (cvId: string) => void; // nút đặt lịch phỏng vấn vòng 2
   onNotifyHired: (cvId: string) => void; // nút thông báo trúng tuyển vòng 3
@@ -21,6 +22,7 @@ export default function CandidateList({
   onShowDetail,
   onShowChat,
   onApproveCV,
+  onShowQuestions,
   onSendToCandidate,
   onScheduleInterview,
   onNotifyHired
@@ -112,10 +114,9 @@ export default function CandidateList({
 
                 <div
                   className={`inline-block px-3 py-1 rounded-full font-medium text-sm
-                    ${
-                      c.result === "Phù hợp"
-                        ? "text-green-700 bg-green-100"
-                        : "text-red-700 bg-red-100"
+                    ${c.result === "Phù hợp"
+                      ? "text-green-700 bg-green-100"
+                      : "text-red-700 bg-red-100"
                     }
                   `}
                 >
@@ -134,24 +135,33 @@ export default function CandidateList({
 
                 {/* Nút theo trạng thái */}
                 {c.status === 0 && (
-                    <button
+                  <button
                     onClick={() => handleApproveClick(String(c.cv_id))}
                     disabled={loadingApproveId === String(c.cv_id)} // disable khi loading
                     className="px-4 py-2 rounded-full bg-yellow-400 text-black font-semibold hover:bg-yellow-500 transition flex items-center justify-center gap-2"
-                    >
+                  >
                     {loadingApproveId === String(c.cv_id) ? (
                       <>
-                      {/* Replace with your loading spinner icon */}
-                      <span className="animate-spin w-4 h-4 border-2 border-yellow-600 border-t-transparent rounded-full inline-block"></span>
-                      Đang duyệt và tạo bộ câu hỏi phỏng vấn ...
+                        {/* Replace with your loading spinner icon */}
+                        <span className="animate-spin w-4 h-4 border-2 border-yellow-600 border-t-transparent rounded-full inline-block"></span>
+                        Đang duyệt và tạo bộ câu hỏi phỏng vấn ...
                       </>
                     ) : (
                       "Duyệt CV"
                     )}
-                    </button>
+                  </button>
                 )}
-
+                {(c.status > 0) && (
+                  <button
+                    onClick={() => onShowQuestions(String(c.cv_id))}
+                    title="Xem danh sách câu hỏi phỏng vấn"
+                    className="p-2 rounded-full hover:bg-purple-100 hover:text-purple-700 transition"
+                  >
+                    <FaQuestionCircle size={20} />
+                  </button>
+                )}
                 {c.status === 1 && (
+
                   <button
                     onClick={() => onSendToCandidate(String(c.cv_id))}
                     className="px-4 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"

@@ -26,6 +26,35 @@ export async function sendInterviewAnswer(
     onChunk(chunk);  // gọi callback khi có dữ liệu mới
   }
 }
+/**
+ * Lấy danh sách câu hỏi phỏng vấn từ CV
+ */
+export async function fetchInterviewQuestion(cv_id?: string, iq_id?: string) {
+  try {
+    // Tạo đối tượng params linh hoạt
+    const params = new URLSearchParams();
+
+    if (cv_id !== undefined && cv_id !== null) {
+      params.append("cv_id", cv_id);
+    }
+
+    if (iq_id !== undefined && iq_id !== null) {
+      params.append("iq_id", iq_id);
+    }
+
+    const url = `${BASE_URL}/v2/interview-questions/search?${params.toString()}`;
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Lỗi khi lấy danh sách CV (status: ${res.status})`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
 
 
 /**
